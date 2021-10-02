@@ -23,9 +23,9 @@ In terminal 3:
 
 ps -ef | grep kafka
 
-./kafka_2.12-3.0.0/bin/kafka-topics.sh --create --bootstrap-server 127.0.0.1:9092 --replication-factor 1 --partitions 1 --topic susy-train
+./kafka_2.12-3.0.0/bin/kafka-topics.sh --create --bootstrap-server 127.0.0.1:9092 --replication-factor 1 --partitions 1 --topic news-train
 
-./kafka_2.12-3.0.0/bin/kafka-topics.sh --describe --bootstrap-server 127.0.0.1:9092 --topic susy-train
+./kafka_2.12-3.0.0/bin/kafka-topics.sh --describe --bootstrap-server 127.0.0.1:9092 --topic news-train
 
 
 

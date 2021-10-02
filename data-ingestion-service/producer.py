@@ -26,5 +26,5 @@ mockNews = [{
 
 producer = KafkaProducer(bootstrap_servers=['127.0.0.1:9092'],
 	value_serializer=lambda v: json.dumps(v).encode('utf-32'))
-write_to_kafka("susy-train", mockNews)
+write_to_kafka("news-train", mockNews)
 
