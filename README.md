@@ -1,7 +1,5 @@
 # NewsArticlesClassifier
-### Group 10
-#### Vedha Krishna Velthapu
-#### P Manish
+### Group 10 **Vedha Krishna Velthapu and P Manish**
 
 ### Problem Statement: 
 https://github.com/Vedha286/NewsArticlesClassifier/blob/main/documents/IIIT%20H%20Capstone%20Project%20-%20News%20articles%20classifier.pdf
