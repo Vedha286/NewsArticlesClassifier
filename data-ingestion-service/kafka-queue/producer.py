@@ -48,7 +48,7 @@ def format_news_api_time(t, datetime):
 
 def get_news_api_response(query, news_api, datetime, format_time):
 	
-    response = all_articles = news_api.get_everything(q=query,
+    response = news_api.get_everything(q=query,
                                       language='en',
                                       sort_by='popularity',
 				      page_size=2,
