@@ -13,7 +13,6 @@ free_news_headers = {
 }
 
 free_news_query_keywords = ["India", "Elon musk", "space travel", "floods"]
-free_news_query_keywords = ["India"]
 
 def format_time(t, datetime):
 	return datetime.strptime(t, "%Y-%m-%d %I:%M:%S")
