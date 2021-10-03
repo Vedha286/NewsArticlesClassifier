@@ -16,9 +16,8 @@ free_news_headers = {
 
 free_news_query_keywords = ["India", "Elon musk", "space travel", "floods"]
 
-
 def format_time(t, datetime):
-    return datetime.strptime(t, "%Y-%m-%d %I:%M:%S")
+    return datetime.strptime(t, "%Y-%m-%d %H:%M:%S")
 
 
 def get_free_news_response(query, url, headers, r, datetime, format_time):
@@ -43,22 +42,19 @@ producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
 
 queue = Queue(topic=news_train_topic, producer=producer)
 
-'''for query in free_news_query_keywords:
-    queue.enqueue(get_free_news_response, query, free_news_url,
-                  free_news_headers, requests, datetime, format_time)'''
-
-
 # scheduler code starts
-def train():
+def get_data_from_apis():
     for query in free_news_query_keywords:
         queue.enqueue(get_free_news_response, query, free_news_url,
                       free_news_headers, requests, datetime, format_time)
+    producer.flush()
 
 
 # After an interval calling the below functions
-schedule.every(10).seconds.do(train)
+schedule.every(20).minutes.do(get_data_from_apis)
+
 while True:
     schedule.run_pending()
     time.sleep(1)
 
-producer.flush()
+
