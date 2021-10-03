@@ -16,6 +16,24 @@ free_news_headers = {
 
 free_news_query_keywords = ["India", "Elon musk", "space travel", "floods"]
 
+
+'''
+pip install newsapi-python
+from newsapi import NewsApiClient
+
+# Init
+newsapi = NewsApiClient(api_key='236cd597a4e2440abe9da95ecf2e1f79')
+
+all_articles = newsapi.get_everything(q='bitcoin',
+                                      sources='bbc-news,the-verge',
+                                      domains='bbc.co.uk,techcrunch.com',
+                                      from_param='2017-12-01',
+                                      to='2017-12-12',
+                                      language='en',
+                                      sort_by='relevancy',
+                                      page=2)
+                                      
+                                      '''
 def format_time(t, datetime):
     return datetime.strptime(t, "%Y-%m-%d %H:%M:%S")
 
