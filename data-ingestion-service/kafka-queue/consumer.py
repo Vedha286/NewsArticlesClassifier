@@ -1,20 +1,21 @@
 from kafka import KafkaConsumer
 import json
-import base64
-import requests
-from kq import Worker
-import pickle
+from kq import Worker, Message, Job
 
+consumer = KafkaConsumer(bootstrap_servers=['127.0.0.1:9092'], group_id='news_group')
 
-consumer = KafkaConsumer(bootstrap_servers=['127.0.0.1:9092'],
-	value_deserializer=lambda m: json.loads(m.decode('utf-32')))
+def processResult(status, message, job, result, exception, stacktrace):
+	if status == 'success':
+		print('results length: ' + str(len(result)))
+		if(len(result)>0):
+			print(result[0])
+	else:
+		print('exception: ' + str(exception))
+		print('stacktrace: ' + str(stacktrace))
 
+worker = Worker(topic='news-train', consumer=consumer, callback=processResult)
 
-worker = Worker(topic='news-train', consumer=consumer, deserializer=pickle.loads)
 worker.start()
 
-consumer.subscribe(['news-train'])
 
-for message in consumer:
-	newAtricle = message.value
-	print (newAtricle)
+
