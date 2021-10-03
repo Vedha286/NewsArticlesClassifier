@@ -5,6 +5,7 @@ import requests
 from datetime import datetime
 import schedule
 import time
+from newsapi import NewsApiClient
 
 news_train_topic = "news-train"
 
@@ -15,26 +16,12 @@ free_news_headers = {
 }
 
 free_news_query_keywords = ["India", "Elon musk", "space travel", "floods"]
+free_news_query_keywords = ["India"]
+
+news_api = NewsApiClient(api_key='236cd597a4e2440abe9da95ecf2e1f79')
 
 
-'''
-pip install newsapi-python
-from newsapi import NewsApiClient
-
-# Init
-newsapi = NewsApiClient(api_key='236cd597a4e2440abe9da95ecf2e1f79')
-
-all_articles = newsapi.get_everything(q='bitcoin',
-                                      sources='bbc-news,the-verge',
-                                      domains='bbc.co.uk,techcrunch.com',
-                                      from_param='2017-12-01',
-                                      to='2017-12-12',
-                                      language='en',
-                                      sort_by='relevancy',
-                                      page=2)
-                                      
-                                      '''
-def format_time(t, datetime):
+def format_free_news_time(t, datetime):
     return datetime.strptime(t, "%Y-%m-%d %H:%M:%S")
 
 
@@ -55,6 +42,29 @@ def get_free_news_response(query, url, headers, r, datetime, format_time):
         response = []
     return response
 
+def format_news_api_time(t, datetime):
+    return datetime.strptime(t, "%Y-%m-%dT%H:%M:%SZ")
+
+
+def get_news_api_response(query, news_api, datetime, format_time):
+	
+    response = all_articles = news_api.get_everything(q=query,
+                                      language='en',
+                                      sort_by='popularity',
+				      page_size=2,
+                                      page=1)
+
+    if("status" in response):
+        if(response["status"] == 'ok'):
+            articles = []
+            for article in response["articles"]:
+                article_resopnse = {"title": article['title'], "date": format_time(
+                    article["publishedAt"], datetime), "summary": article["content"], "category": None, "source": article["url"]}
+                articles.append(article_resopnse)
+            response = articles
+    else:
+        response = []
+    return response
 
 producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
 
@@ -64,7 +74,8 @@ queue = Queue(topic=news_train_topic, producer=producer)
 def get_data_from_apis():
     for query in free_news_query_keywords:
         queue.enqueue(get_free_news_response, query, free_news_url,
-                      free_news_headers, requests, datetime, format_time)
+                      free_news_headers, requests, datetime, format_free_news_time)
+        queue.enqueue(get_news_api_response, query, news_api, datetime, format_news_api_time)
     producer.flush()
 
 
