@@ -5,7 +5,6 @@ import requests
 from datetime import datetime
 import schedule
 import time
-from newsapi import NewsApiClient
 
 news_train_topic = "news-train"
 
@@ -24,11 +23,53 @@ newscather_headers = {
 newscather_daily_limit = 1000
 times_per_day = 6
 
+#Choose these keywords from google trends and used the following categories:
+#Searches, News, Athletes, People
+#https://trends.google.com/trends/yis/2020/GLOBAL/
 
-query_keywords = [{"keyword":"India", "isComplete":False}, 
-{"keyword":"Elon musk", "isComplete":False}, 
-{"keyword":"space travel", "isComplete":False}, 
-{"keyword":"Vedha", "isComplete":False}]
+# Want to implement this later in the week: 
+# https://towardsdatascience.com/google-trends-api-for-python-a84bc25db88f
+query_keywords = [
+    {"keyword":"Coronavirus", "isComplete":False}, 
+    {"keyword":"Election results", "isComplete":False}, 
+    {"keyword":"Kobe Bryant", "isComplete":False}, 
+    {"keyword":"Zoom", "isComplete":False}, 
+    {"keyword":"IPL", "isComplete":False}, 
+    {"keyword":"India vs New Zealand", "isComplete":False}, 
+    {"keyword":"Coronavirus update", "isComplete":False}, 
+    {"keyword":"Coronavirus symptoms", "isComplete":False}, 
+    {"keyword":"Joe Biden", "isComplete":False}, 
+    {"keyword":"Google Classroom", "isComplete":False}, 
+    {"keyword":"Iran", "isComplete":False}, 
+    {"keyword":"Beirut", "isComplete":False}, 
+    {"keyword":"Hantavirus", "isComplete":False}, 
+    {"keyword":"Stimulus checks", "isComplete":False}, 
+    {"keyword":"Unemployment", "isComplete":False}, 
+    {"keyword":"Tesla stock", "isComplete":False}, 
+    {"keyword":"Bihar election result", "isComplete":False}, 
+    {"keyword":"Black Lives Matter", "isComplete":False}, 
+    {"keyword":"Joe Biden", "isComplete":False}, 
+    {"keyword":"Kim Jong Un", "isComplete":False}, 
+    {"keyword":"Boris Johnson", "isComplete":False}, 
+    {"keyword":"Kamala Harris", "isComplete":False}, 
+    {"keyword":"Tom Hanks", "isComplete":False}, 
+    {"keyword":"Jacob Blake", "isComplete":False}, 
+    {"keyword":"Kanye West", "isComplete":False}, 
+    {"keyword":"Ghislaine Maxwell", "isComplete":False}, 
+    {"keyword":"August Alsina", "isComplete":False}, 
+    {"keyword":"Ryan Newman", "isComplete":False}, 
+    {"keyword":"Michael Jordan", "isComplete":False}, 
+    {"keyword":"Tyson Fury", "isComplete":False}, 
+    {"keyword":"Tom Brady", "isComplete":False}, 
+    {"keyword":"Hantavirus", "isComplete":False}, 
+    {"keyword":"Mike Tyson", "isComplete":False}, 
+    {"keyword":"Luis Suárez", "isComplete":False}, 
+    {"keyword":"Hantavirus", "isComplete":False}, 
+    {"keyword":"Alex Zanardi", "isComplete":False}, 
+    {"keyword":"Delonte West", "isComplete":False}, 
+    {"keyword":"Drew Brees", "isComplete":False}, 
+    {"keyword":"Thiago Silva", "isComplete":False}
+]
 
 def format_article_date_time(t, datetime):
     return datetime.strptime(t, "%Y-%m-%d %H:%M:%S")
@@ -124,11 +165,11 @@ def get_data_from_apis():
 		print(query["keyword"])
 		if(not query["isComplete"]):
 			
-			queue.enqueue(get_free_news_response, query["keyword"], free_news_url,
-                      free_news_headers, requests, datetime, format_article_date_time,time, free_news_daily_limit/times_per_day)
+			queue.enqueue(get_free_news_response, query["keyword"], free_news_url, free_news_headers, requests, datetime, format_article_date_time,time, free_news_daily_limit/times_per_day)
 
 			queue.enqueue(get_newscather_response, query["keyword"], newscather_url, newscather_headers, requests, datetime, format_article_date_time, time, newscather_daily_limit/times_per_day)
 			query["isComplete"] = True
+
 	producer.flush()
 	times_per_day_to_run = times_per_day_to_run + 1	
 	if(times_per_day_to_run == 24/times_per_day):
