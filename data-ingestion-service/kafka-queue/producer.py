@@ -179,7 +179,7 @@ def get_data_from_apis():
 			query["isComplete"] = False
 
 # After an interval calling the below functions
-schedule.every(10).seconds.do(get_data_from_apis)
+schedule.every(24/times_per_day).hours.do(get_data_from_apis)
 
 while True:
     schedule.run_pending()
