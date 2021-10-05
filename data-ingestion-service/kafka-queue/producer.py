@@ -26,50 +26,17 @@ times_per_day = 6
 #Choose these keywords from google trends and used the following categories:
 #Searches, News, Athletes, People
 #https://trends.google.com/trends/yis/2020/GLOBAL/
+arr = ["Coronavirus", "Trump", "Elon"]
+query_str = ""
+
+for i in range(len(arr)):
+    query_str = query_str + arr[i] 
+    if(len(arr) -1 > i):
+      query_str = query_str + " OR "
 
 # Want to implement this later in the week: 
 # https://towardsdatascience.com/google-trends-api-for-python-a84bc25db88f
-query_keywords = [
-    {"keyword":"Coronavirus", "isComplete":False}, 
-    {"keyword":"Election results", "isComplete":False}, 
-    {"keyword":"Kobe Bryant", "isComplete":False}, 
-    {"keyword":"Zoom", "isComplete":False}, 
-    {"keyword":"IPL", "isComplete":False}, 
-    {"keyword":"India vs New Zealand", "isComplete":False}, 
-    {"keyword":"Coronavirus update", "isComplete":False}, 
-    {"keyword":"Coronavirus symptoms", "isComplete":False}, 
-    {"keyword":"Joe Biden", "isComplete":False}, 
-    {"keyword":"Google Classroom", "isComplete":False}, 
-    {"keyword":"Iran", "isComplete":False}, 
-    {"keyword":"Beirut", "isComplete":False}, 
-    {"keyword":"Hantavirus", "isComplete":False}, 
-    {"keyword":"Stimulus checks", "isComplete":False}, 
-    {"keyword":"Unemployment", "isComplete":False}, 
-    {"keyword":"Tesla stock", "isComplete":False}, 
-    {"keyword":"Bihar election result", "isComplete":False}, 
-    {"keyword":"Black Lives Matter", "isComplete":False}, 
-    {"keyword":"Joe Biden", "isComplete":False}, 
-    {"keyword":"Kim Jong Un", "isComplete":False}, 
-    {"keyword":"Boris Johnson", "isComplete":False}, 
-    {"keyword":"Kamala Harris", "isComplete":False}, 
-    {"keyword":"Tom Hanks", "isComplete":False}, 
-    {"keyword":"Jacob Blake", "isComplete":False}, 
-    {"keyword":"Kanye West", "isComplete":False}, 
-    {"keyword":"Ghislaine Maxwell", "isComplete":False}, 
-    {"keyword":"August Alsina", "isComplete":False}, 
-    {"keyword":"Ryan Newman", "isComplete":False}, 
-    {"keyword":"Michael Jordan", "isComplete":False}, 
-    {"keyword":"Tyson Fury", "isComplete":False}, 
-    {"keyword":"Tom Brady", "isComplete":False}, 
-    {"keyword":"Hantavirus", "isComplete":False}, 
-    {"keyword":"Mike Tyson", "isComplete":False}, 
-    {"keyword":"Luis Suárez", "isComplete":False}, 
-    {"keyword":"Hantavirus", "isComplete":False}, 
-    {"keyword":"Alex Zanardi", "isComplete":False}, 
-    {"keyword":"Delonte West", "isComplete":False}, 
-    {"keyword":"Drew Brees", "isComplete":False}, 
-    {"keyword":"Thiago Silva", "isComplete":False}
-]
+
 
 def format_article_date_time(t, datetime):
     return datetime.strptime(t, "%Y-%m-%d %H:%M:%S")
@@ -86,7 +53,7 @@ def get_free_news_response(query, url, headers, r, time, limit, handle_error_res
 
     while not stop:
         if(handle_error_response(response)):
-            print(f"page_count : {str(page_count)}  total_pages: {str(response['total_pages'])}")
+            print("page_count : " + str(page_count) + " total_pages: " + str(response['total_pages']))
             page_count = page_count + 1
                 
             for article in response["articles"]:
@@ -129,7 +96,7 @@ def get_newscather_response(query, url, headers, r, time, limit, handle_error_re
 
     while not stop:
         if(handle_error_response(response)):
-            print(f"page_count : {str(page_count)}  total_pages: {str(response['total_pages'])}")
+            print("page_count : " + str(page_count) + " total_pages: " + str(response['total_pages']))
             page_count = page_count + 1
                 
             for article in response["articles"]:
@@ -141,8 +108,8 @@ def get_newscather_response(query, url, headers, r, time, limit, handle_error_re
             else:
                 time.sleep(1)
                 querystring = {"q": query, "lang": "en", "page_size": page_size, "sort_by":"date", "page": page_count}
-			
                 response = r.get(url, headers=headers, params=querystring).json()
+                
         else:
             stop = True
         
@@ -157,30 +124,13 @@ def isLimtReached(limit, page_count, total_pages):
 producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
 
 queue = Queue(topic=news_train_topic, producer=producer)
-times_per_day_to_run = 0
 # scheduler code starts
 def get_data_from_apis():
-	global times_per_day_to_run
-
-	for query in query_keywords:
-		print(query["keyword"])
-
-		if(not query["isComplete"]):
-			
-			queue.enqueue(get_free_news_response, query["keyword"], free_news_url, free_news_headers, requests, time, free_news_daily_limit/times_per_day, handle_error_response, format_response, isLimtReached)
-			queue.enqueue(get_newscather_response, query["keyword"], newscather_url, newscather_headers, requests, time, newscather_daily_limit/times_per_day, handle_error_response, format_response, isLimtReached)
-
-			query["isComplete"] = True
+	queue.enqueue(get_free_news_response, query_str, free_news_url, free_news_headers, requests, time, free_news_daily_limit/times_per_day, handle_error_response, format_response, isLimtReached)
+	queue.enqueue(get_newscather_response, query_str, newscather_url, newscather_headers, requests, time, newscather_daily_limit/times_per_day, handle_error_response, format_response, isLimtReached)
 
 	producer.flush()
-	times_per_day_to_run = times_per_day_to_run + 1	
-
-	if(times_per_day_to_run == 24/times_per_day):
-		print(f"All the keywords ran {str(times_per_day_to_run)}")
-
-		times_per_day_to_run = 0
-		for query in query_keywords:
-			query["isComplete"] = False
+	
 
 # After an interval calling the below functions
 schedule.every(24/times_per_day).hours.do(get_data_from_apis)
