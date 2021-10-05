@@ -23,6 +23,8 @@ newscather_headers = {
 newscather_daily_limit = 1000
 times_per_day = 6
 
+time_string_format = "%Y-%m-%d %H:%M:%S"
+
 #Choose these keywords from google trends and used the following categories:
 #Searches, News, Athletes, People
 #https://trends.google.com/trends/yis/2020/GLOBAL/
@@ -34,6 +36,8 @@ for i in range(len(arr)):
     if(len(arr) -1 > i):
       query_str = query_str + " OR "
 
+print(query_str)
+
 # Want to implement this later in the week: 
 # https://towardsdatascience.com/google-trends-api-for-python-a84bc25db88f
 
@@ -41,7 +45,7 @@ for i in range(len(arr)):
 def format_article_date_time(t, datetime):
     return datetime.strptime(t, "%Y-%m-%d %H:%M:%S")
 
-def get_free_news_response(query, url, headers, r, time, limit, handle_error_response, format_response, isLimtReached):
+def get_free_news_response(query, url, headers, r, time, limit, handle_error_response, format_response, isLimtReached, time_string_format, datetime):
     
     articles = []	
     page_count = 1
@@ -57,7 +61,7 @@ def get_free_news_response(query, url, headers, r, time, limit, handle_error_res
             page_count = page_count + 1
                 
             for article in response["articles"]:
-                articles.append(format_response(article))
+                articles.append(format_response(article, time_string_format, datetime))
                 
             if(isLimtReached(limit, page_count, response["total_pages"])):
                 stop = True
@@ -81,10 +85,10 @@ def handle_error_response(response):
     print(response)
     return None
 
-def format_response(article):
-    return {"title": article['title'], "date": format_article_date_time(article["published_date"], datetime), "summary": article["summary"], "category": article["topic"], "source": article["link"]}
+def format_response(article, time_string_format, datetime):
+    return {"title": article['title'], "date": datetime.strptime(article["published_date"], time_string_format), "summary": article["summary"], "category": article["topic"], "source": article["link"]}
 
-def get_newscather_response(query, url, headers, r, time, limit, handle_error_response, format_response, isLimtReached):
+def get_newscather_response(query, url, headers, r, time, limit, handle_error_response, format_response, isLimtReached, time_string_format, datetime):
     
     articles = []	
     page_count = 1
@@ -100,7 +104,7 @@ def get_newscather_response(query, url, headers, r, time, limit, handle_error_re
             page_count = page_count + 1
                 
             for article in response["articles"]:
-                articles.append(format_response(article))
+                articles.append(format_response(article, time_string_format, datetime))
                 
             if(isLimtReached(limit, page_count, response["total_pages"])):
                 stop = True
@@ -126,14 +130,14 @@ producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
 queue = Queue(topic=news_train_topic, producer=producer)
 # scheduler code starts
 def get_data_from_apis():
-	queue.enqueue(get_free_news_response, query_str, free_news_url, free_news_headers, requests, time, free_news_daily_limit/times_per_day, handle_error_response, format_response, isLimtReached)
-	queue.enqueue(get_newscather_response, query_str, newscather_url, newscather_headers, requests, time, newscather_daily_limit/times_per_day, handle_error_response, format_response, isLimtReached)
+	queue.enqueue(get_free_news_response, query_str, free_news_url, free_news_headers, requests, time, free_news_daily_limit/times_per_day, handle_error_response, format_response, isLimtReached, time_string_format, datetime)
+	queue.enqueue(get_newscather_response, query_str, newscather_url, newscather_headers, requests, time, newscather_daily_limit/times_per_day, handle_error_response, format_response, isLimtReached, time_string_format, datetime)
 
 	producer.flush()
 	
 
 # After an interval calling the below functions
-schedule.every(24/times_per_day).hours.do(get_data_from_apis)
+schedule.every(5).minutes.do(get_data_from_apis)
 
 while True:
     schedule.run_pending()
