@@ -74,7 +74,7 @@ query_keywords = [
 def format_article_date_time(t, datetime):
     return datetime.strptime(t, "%Y-%m-%d %H:%M:%S")
 
-def get_free_news_response(query, url, headers, r, datetime, format_time,time,limit):
+def get_free_news_response(query, url, headers, r, time, limit, handle_error_response, format_response, isLimtReached):
     
     articles = []	
     page_count = 1
@@ -85,36 +85,39 @@ def get_free_news_response(query, url, headers, r, datetime, format_time,time,li
     response = r.get(url, headers=headers, params=querystring).json()
 
     while not stop:
-        if("status" in response):
-            if(response["status"] == 'ok'):
-                print("page_count : " + str(page_count) + "   total_pages: " + str(response["total_pages"]))
-
-                page_count = page_count + 1
+        if(handle_error_response(response)):
+            print(f"page_count : {str(page_count)}  total_pages: {str(response['total_pages'])}")
+            page_count = page_count + 1
                 
-                for article in response["articles"]:
-                    article_resopnse = {"title": article['title'], "date": format_time(article["published_date"], datetime), "summary": article["summary"], "category": article["topic"], "source": article["link"]}
-                    articles.append(article_resopnse)
+            for article in response["articles"]:
+                articles.append(format_response(article))
                 
-                if(page_count == response["total_pages"] or page_count >= limit):
-                    stop = True
-
-                else:
-                    time.sleep(1)
-                    querystring = {"q": query, "lang": "en", "page_size": page_size, "page": page_count}
-			
-                    response = r.get(url, headers=headers, params=querystring).json()
-            elif(response["status"] != 'ok'):
-                print(response)
+            if(isLimtReached(limit, page_count, response["total_pages"])):
                 stop = True
-        elif("status" not in response):
-            print(response)
+
+            else:
+                time.sleep(1)
+                querystring = {"q": query, "lang": "en", "page_size": page_size, "page": page_count}
+                response = r.get(url, headers=headers, params=querystring).json()
+
+        else:
             stop = True
+
     print("=====================================================\n\n\n")
 
     return articles
 
+def handle_error_response(response):
+    if("status" in response):
+        if(response["status"] == 'ok'):
+            return response
+    print(response)
+    return None
 
-def get_newscather_response(query, url, headers, r, datetime, format_time,time,limit):
+def format_response(article):
+    return {"title": article['title'], "date": format_article_date_time(article["published_date"], datetime), "summary": article["summary"], "category": article["topic"], "source": article["link"]}
+
+def get_newscather_response(query, url, headers, r, time, limit, handle_error_response, format_response, isLimtReached):
     
     articles = []	
     page_count = 1
@@ -125,33 +128,30 @@ def get_newscather_response(query, url, headers, r, datetime, format_time,time,l
     response = r.get(url, headers=headers, params=querystring).json()
 
     while not stop:
-        if("status" in response):
-            if(response["status"] == 'ok'):
-                print("page_count : " + str(page_count) + "   total_pages: " + str(response["total_pages"]))
-
-                page_count = page_count + 1
+        if(handle_error_response(response)):
+            print(f"page_count : {str(page_count)}  total_pages: {str(response['total_pages'])}")
+            page_count = page_count + 1
                 
-                for article in response["articles"]:
-                    article_resopnse = {"title": article['title'], "date": format_time(article["published_date"], datetime), "summary": article["summary"], "category": article["topic"], "source": article["link"]}
-                    articles.append(article_resopnse)
+            for article in response["articles"]:
+                articles.append(format_response(article))
                 
-                if(page_count == response["total_pages"] or page_count >= limit):
-                    stop = True
-
-                else:
-                    time.sleep(1)
-                    querystring = {"q": query, "lang": "en", "page_size": page_size, "sort_by":"date", "page": page_count}
-			
-                    response = r.get(url, headers=headers, params=querystring).json()
-            elif(response["status"] != 'ok'):
-                print(response)
+            if(isLimtReached(limit, page_count, response["total_pages"])):
                 stop = True
-        elif("status" not in response):
+
+            else:
+                time.sleep(1)
+                querystring = {"q": query, "lang": "en", "page_size": page_size, "sort_by":"date", "page": page_count}
+			
+                response = r.get(url, headers=headers, params=querystring).json()
+        else:
             stop = True
-            print(response)
+        
     print("=====================================================\n\n\n")
 
     return articles
+
+def isLimtReached(limit, page_count, total_pages):
+    return page_count == total_pages or page_count >= limit
 
 
 producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
@@ -161,19 +161,23 @@ times_per_day_to_run = 0
 # scheduler code starts
 def get_data_from_apis():
 	global times_per_day_to_run
+
 	for query in query_keywords:
 		print(query["keyword"])
+
 		if(not query["isComplete"]):
 			
-			queue.enqueue(get_free_news_response, query["keyword"], free_news_url, free_news_headers, requests, datetime, format_article_date_time,time, free_news_daily_limit/times_per_day)
+			queue.enqueue(get_free_news_response, query["keyword"], free_news_url, free_news_headers, requests, time, free_news_daily_limit/times_per_day, handle_error_response, format_response, isLimtReached)
+			queue.enqueue(get_newscather_response, query["keyword"], newscather_url, newscather_headers, requests, time, newscather_daily_limit/times_per_day, handle_error_response, format_response, isLimtReached)
 
-			queue.enqueue(get_newscather_response, query["keyword"], newscather_url, newscather_headers, requests, datetime, format_article_date_time, time, newscather_daily_limit/times_per_day)
 			query["isComplete"] = True
 
 	producer.flush()
 	times_per_day_to_run = times_per_day_to_run + 1	
+
 	if(times_per_day_to_run == 24/times_per_day):
-		print("All the keywords ran " + str(times_per_day_to_run))
+		print(f"All the keywords ran {str(times_per_day_to_run)}")
+
 		times_per_day_to_run = 0
 		for query in query_keywords:
 			query["isComplete"] = False
