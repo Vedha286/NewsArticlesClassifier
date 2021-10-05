@@ -5,7 +5,8 @@ import spacy
 import numpy as np
 from sklearn.neighbors import NearestNeighbors
 
-label_names = ['business', 'entertainment', 'politics', 'sport', 'tech']
+label_names = ['sport', 'tech', 'world', 'finance', 'politics', 'business','economics','entertainment',
+'beauty','travel','music','food','science','gaming', 'energy']
 
 docs = ["UK economy facing 'major risks'",
 "The UK manufacturing sector will continue to face 'serious challenges' over the next two years, the British Chamber of Commerce (BCC) has said.",
@@ -19,7 +20,7 @@ docs = []
 true_preds = []
 client = MongoClient("mongodb+srv://IIITH-group10:LeoEXtI5sxntXmpG@cluster0.jejzt.mongodb.net/news?retryWrites=true&w=majority")
 
-myresult = client.news.newsArticles.find({ "category": "news" })
+myresult = client.news.newsArticles.find({  })
 for x in myresult:
       try:
             if(x["summary"]):
@@ -82,7 +83,7 @@ label_vectors = np.asarray([
 k = int(len(docs)/len(label_names))
 print(len(docs))
 print(k)
-neigh = NearestNeighbors(n_neighbors=len(label_names))
+neigh = NearestNeighbors(n_neighbors=5)
 neigh.fit(label_vectors)
 
 def predict(doc, nlp, neigh):
