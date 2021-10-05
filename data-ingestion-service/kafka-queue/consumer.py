@@ -13,9 +13,10 @@ def save_all_documents_to_db(docs):
             db = client.news
             stored_docs = db.newsArticles.insert_many(docs)
             print("Saved " + str(len(stored_docs.inserted_ids)) + " documents")
-
+            print("Failed to save " + str(len(docs) - len(stored_docs.inserted_ids)) + " documents")	
       except errors.BulkWriteError as e:
-            #print("Failed to save " + str(len(docs) - len(stored_docs.inserted_ids)) + " documents")	
+            print("Saved " + str(e.details['nInserted']) + " documents")
+            print("Failed to save " + str(len(docs) - e.details['nInserted']) + " documents\n\n\n")
             print("Articles bulk insertion error " + str(e))
 		
             panic_list = list(filter(lambda x: x['code'] != 11000, e.details['writeErrors']))
@@ -42,7 +43,7 @@ consumer = KafkaConsumer(bootstrap_servers=['127.0.0.1:9092'], group_id='news_gr
 def processResult(status, message, job, result, exception, stacktrace):
       if status == 'success':
             print('Results length: ' + str(len(result)))
-            print(result)
+            # print(result)
             if(len(result)>0):
                   clean_and_save_articles(result)
       else:
