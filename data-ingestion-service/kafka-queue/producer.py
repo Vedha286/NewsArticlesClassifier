@@ -5,6 +5,8 @@ import requests
 from datetime import datetime
 import schedule
 import time
+import pandas as pd
+from pytrends.request import TrendReq
 
 news_train_topic = "news-train"
 
@@ -28,7 +30,10 @@ time_string_format = "%Y-%m-%d %H:%M:%S"
 #Choose these keywords from google trends and used the following categories:
 #Searches, News, Athletes, People
 #https://trends.google.com/trends/yis/2020/GLOBAL/
-arr = ["Coronavirus", "Trump", "Elon"]
+pytrend = TrendReq()
+trendingSearches = pytrend.trending_searches() 
+#arr = ["Coronavirus", "Trump", "Elon"]
+arr= trendingSearches.iloc[:,0].values
 query_str = ""
 
 for i in range(len(arr)):
