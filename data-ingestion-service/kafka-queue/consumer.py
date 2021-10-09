@@ -21,13 +21,9 @@ def save_all_documents_to_db(docs):
                         failed_docs = failed_docs + 1
                         print("Failed to save " + str(doc) + " with error: " + str(e))
                         
-            #stored_docs = db.newsArticles.insert_many(docs)
             print("Saved " + str(stored_docs) + " documents")
-#            print("Saved " + str(len(stored_docs.inserted_ids)) + " documents")
             print("Failed to save " + str(failed_docs) + " documents")	
       except errors.BulkWriteError as e:
-            #print("Saved " + str(e.details['nInserted']) + " documents")
-            #print("Failed to save " + str(len(docs) - e.details['nInserted']) + " documents\n\n\n")
             print("Articles bulk insertion error " + str(e))
 		
             panic_list = list(filter(lambda x: x['code'] != 11000, e.details['writeErrors']))

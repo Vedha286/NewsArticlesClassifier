@@ -23,7 +23,8 @@ newscather_headers = {
 }
 
 newscather_daily_limit = 1000
-times_per_day = 6
+times_per_day = 1
+max_query_strings = 5
 
 time_string_format = "%Y-%m-%d %H:%M:%S"
 
@@ -32,15 +33,15 @@ trendingSearches = pytrend.trending_searches()
 arr= trendingSearches.iloc[:,0].values
 query_str = ""
 stopSize = len(arr)
-if(stopSize > 5):
-	stopSize = 5
+if(stopSize > max_query_strings):
+	stopSize = max_query_strings
 
 for i in range(stopSize):
     query_str = query_str + arr[i] 
     if(stopSize -1 > i):
       query_str = query_str + " || "
 
-print(query_str)
+print("Query string for API: " + str(query_str))
 
 def format_article_date_time(t, datetime):
     return datetime.strptime(t, "%Y-%m-%d %H:%M:%S")
@@ -137,7 +138,7 @@ def get_data_from_apis():
 	
 
 # After an interval calling the below functions
-schedule.every(2).minutes.do(get_data_from_apis)
+schedule.every(24/times_per_day).hours.do(get_data_from_apis)
 
 while True:
     schedule.run_pending()
