@@ -27,9 +27,6 @@ times_per_day = 6
 
 time_string_format = "%Y-%m-%d %H:%M:%S"
 
-#Choose these keywords from google trends and used the following categories:
-#Searches, News, Athletes, People
-#https://trends.google.com/trends/yis/2020/GLOBAL/
 pytrend = TrendReq()
 trendingSearches = pytrend.trending_searches() 
 #arr = ["Coronavirus", "Trump", "Elon"]
@@ -42,10 +39,6 @@ for i in range(len(arr)):
       query_str = query_str + " OR "
 
 print(query_str)
-
-# Want to implement this later in the week: 
-# https://towardsdatascience.com/google-trends-api-for-python-a84bc25db88f
-
 
 def format_article_date_time(t, datetime):
     return datetime.strptime(t, "%Y-%m-%d %H:%M:%S")
