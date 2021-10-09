@@ -35,6 +35,8 @@ https://docs.google.com/document/d/12yBr9iS_2Y7TUdLg-8Pu-fC3epiNBLcLnXRKi2ezRB4/
    - **category**: The category the news belongs to, i.e sports, health
    - **source**: URL link to the original news article
    - **date**: Date the news article was published
+   Screenshot of data collected so far
+   ![image](https://user-images.githubusercontent.com/55736158/136675367-139481b2-60f3-4a75-abd6-2b13b9fb008f.png)
 
 5. Challenges encountered and the way you tackled them
    - Lack of understanding on Kafka
