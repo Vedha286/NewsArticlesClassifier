@@ -29,14 +29,16 @@ time_string_format = "%Y-%m-%d %H:%M:%S"
 
 pytrend = TrendReq()
 trendingSearches = pytrend.trending_searches() 
-#arr = ["Coronavirus", "Trump", "Elon"]
 arr= trendingSearches.iloc[:,0].values
 query_str = ""
+stopSize = len(arr)
+if(stopSize > 5):
+	stopSize = 5
 
-for i in range(len(arr)):
+for i in range(stopSize):
     query_str = query_str + arr[i] 
-    if(len(arr) -1 > i):
-      query_str = query_str + " OR "
+    if(stopSize -1 > i):
+      query_str = query_str + " || "
 
 print(query_str)
 
@@ -135,7 +137,7 @@ def get_data_from_apis():
 	
 
 # After an interval calling the below functions
-schedule.every(5).minutes.do(get_data_from_apis)
+schedule.every(2).minutes.do(get_data_from_apis)
 
 while True:
     schedule.run_pending()

@@ -10,13 +10,24 @@ def save_all_documents_to_db(docs):
 
       try:
             client = MongoClient("mongodb+srv://IIITH-group10:LeoEXtI5sxntXmpG@cluster0.jejzt.mongodb.net/news?retryWrites=true&w=majority")
+            stored_docs = 0
+            failed_docs = 0
             db = client.news
-            stored_docs = db.newsArticles.insert_many(docs)
-            print("Saved " + str(len(stored_docs.inserted_ids)) + " documents")
-            print("Failed to save " + str(len(docs) - len(stored_docs.inserted_ids)) + " documents")	
+            for doc in docs:
+                   try:
+                        db.newsArticles.insert_one(doc)
+                        stored_docs = stored_docs + 1
+                   except Exception as e:
+                        failed_docs = failed_docs + 1
+                        print("Failed to save " + str(doc) + " with error: " + str(e))
+                        
+            #stored_docs = db.newsArticles.insert_many(docs)
+            print("Saved " + str(stored_docs) + " documents")
+#            print("Saved " + str(len(stored_docs.inserted_ids)) + " documents")
+            print("Failed to save " + str(failed_docs) + " documents")	
       except errors.BulkWriteError as e:
-            print("Saved " + str(e.details['nInserted']) + " documents")
-            print("Failed to save " + str(len(docs) - e.details['nInserted']) + " documents\n\n\n")
+            #print("Saved " + str(e.details['nInserted']) + " documents")
+            #print("Failed to save " + str(len(docs) - e.details['nInserted']) + " documents\n\n\n")
             print("Articles bulk insertion error " + str(e))
 		
             panic_list = list(filter(lambda x: x['code'] != 11000, e.details['writeErrors']))
