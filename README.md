@@ -35,6 +35,7 @@ https://docs.google.com/document/d/12yBr9iS_2Y7TUdLg-8Pu-fC3epiNBLcLnXRKi2ezRB4/
    - **category**: The category the news belongs to, i.e sports, health
    - **source**: URL link to the original news article
    - **date**: Date the news article was published
+
    Screenshot of data collected so far:
    ![image](https://user-images.githubusercontent.com/55736158/136675390-2f918e53-59fb-43f8-a094-07934c14d4fb.png)
    
