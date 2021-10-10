@@ -13,7 +13,7 @@ news_train_topic = "news-train"
 free_news_url = "https://free-news.p.rapidapi.com/v1/search"
 free_news_headers = {
     'x-rapidapi-host': "free-news.p.rapidapi.com",
-    'x-rapidapi-key': "a074ca3a54mshd2b31882937309fp11ba8bjsndbc6662232d3"
+    'x-rapidapi-key': "6965fe9a47msh414443209370cd3p188965jsn75040c6b3a4f"
 }
 free_news_daily_limit = 100
 
