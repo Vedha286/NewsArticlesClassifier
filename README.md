@@ -33,6 +33,7 @@ https://docs.google.com/document/d/12yBr9iS_2Y7TUdLg-8Pu-fC3epiNBLcLnXRKi2ezRB4/
 
    - We validate that all the fields we needs is in returned by the API (`published-date`,`topic/category`,`title`,`summary`, and `source`).
    - Both the APIs we used had a `news` category which we changed to `general news` before the article is stored in the database to reduce some ambiguity.
+   - The topic we used in kafka is `news-train`
 
 4. What comes out as an output:
 
@@ -85,3 +86,14 @@ https://docs.google.com/document/d/12yBr9iS_2Y7TUdLg-8Pu-fC3epiNBLcLnXRKi2ezRB4/
          Finding a good source to get news articles from as most of the sources/apis were paid
          
          Solution: After a lot of research we found 1 api we can use and the free news api provided, worked for us.
+
+## Running Instructions 
+   
+   1. To setup kafka follow the steps https://github.com/Vedha286/NewsArticlesClassifier/edit/milestone1/data-ingestion-service/setup-steps
+   2. On terminal 1 run: `./kafka_2.12-3.0.0/bin/zookeeper-server-start.sh ./kafka_2.12-3.0.0/config/zookeeper.properties`
+   3. On terminal 2 run: `./kafka_2.12-3.0.0/bin/kafka-server-start.sh ./kafka_2.12-3.0.0/config/server.properties`
+   4. On terminal 3 run: `cd data-ingestion-service`
+   5. Install dependencies using: `pip3 install -r requirements.txt` 
+   6. On terminal 3 run: `python3 consumer.py`
+   7. On terminal 4 run: `python3 producer.py`
+     
