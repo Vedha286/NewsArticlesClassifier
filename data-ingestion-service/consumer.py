@@ -10,7 +10,7 @@ def save_all_documents_to_db(docs):
       print("Saving " + str(len(docs)) + " documents")
 
       try:
-            client = MongoClient("mongodb+srv://" + conf.mongodb_user + ":" + conf.mongodb_password + "@cluster0.jejzt.mongodb.net/news?retryWrites=true&w=majority")
+            client = MongoClient(conf.mongodb_connection_string)
             stored_docs = 0
             failed_docs = 0
             db = client.news
@@ -24,7 +24,7 @@ def save_all_documents_to_db(docs):
                         
             print("Saved " + str(stored_docs) + " documents")
             print("Failed to save " + str(failed_docs) + " documents")	
-		
+
       except errors.BulkWriteError as e:
             print("Articles bulk insertion error " + str(e))		
             panic_list = list(filter(lambda x: x['code'] != 11000, e.details['writeErrors']))
