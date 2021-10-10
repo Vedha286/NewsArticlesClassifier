@@ -24,7 +24,7 @@ newscather_headers = {
 
 newscather_daily_limit = 1000
 times_per_day = 1
-max_query_strings = 10
+max_query_strings = 7
 
 time_string_format = "%Y-%m-%d %H:%M:%S"
 
