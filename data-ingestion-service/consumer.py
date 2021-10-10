@@ -1,6 +1,7 @@
 from kafka import KafkaConsumer
 from kq import Worker
 from pymongo import MongoClient, errors
+import keys as conf
 
 def format_article_date_time(t, datetime):
       return datetime.strptime(t, "%Y-%m-%d %H:%M:%S")
@@ -9,7 +10,7 @@ def save_all_documents_to_db(docs):
       print("Saving " + str(len(docs)) + " documents")
 
       try:
-            client = MongoClient("mongodb+srv://IIITH-group10:LeoEXtI5sxntXmpG@cluster0.jejzt.mongodb.net/news?retryWrites=true&w=majority")
+            client = MongoClient("mongodb+srv://" + conf.mongodb_user + ":" + conf.mongodb_password + "@cluster0.jejzt.mongodb.net/news?retryWrites=true&w=majority")
             stored_docs = 0
             failed_docs = 0
             db = client.news
@@ -23,9 +24,9 @@ def save_all_documents_to_db(docs):
                         
             print("Saved " + str(stored_docs) + " documents")
             print("Failed to save " + str(failed_docs) + " documents")	
-      except errors.BulkWriteError as e:
-            print("Articles bulk insertion error " + str(e))
 		
+      except errors.BulkWriteError as e:
+            print("Articles bulk insertion error " + str(e))		
             panic_list = list(filter(lambda x: x['code'] != 11000, e.details['writeErrors']))
             if len(panic_list) > 0:
                   print("These are not duplicate errors " + str(panic_list))
@@ -50,7 +51,6 @@ consumer = KafkaConsumer(bootstrap_servers=['127.0.0.1:9092'], group_id='news_gr
 def processResult(status, message, job, result, exception, stacktrace):
       if status == 'success':
             print('Results length: ' + str(len(result)))
-            # print(result)
             if(len(result)>0):
                   clean_and_save_articles(result)
       else:

@@ -7,19 +7,20 @@ import schedule
 import time
 import pandas as pd
 from pytrends.request import TrendReq
+import keys as conf
 
 news_train_topic = "news-train"
 
 free_news_url = "https://free-news.p.rapidapi.com/v1/search"
 free_news_headers = {
     'x-rapidapi-host': "free-news.p.rapidapi.com",
-    'x-rapidapi-key': "6965fe9a47msh414443209370cd3p188965jsn75040c6b3a4f"
+    'x-rapidapi-key': conf.rapidapi_key
 }
 free_news_daily_limit = 100
 
 newscather_url = "https://api.newscatcherapi.com/v2/search"
 newscather_headers = {
-    'x-api-key': "HDKy1I5lee16dLsWghX220ThukgRgfi7OdQZpyzL8Vo"
+    'x-api-key': conf.newscather_key
 }
 
 newscather_daily_limit = 1000
