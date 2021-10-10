@@ -1,12 +1,10 @@
 from kafka import KafkaProducer
 from kq import Queue
-import json
 import requests
 from datetime import datetime
 import schedule
 import time
 import pandas as pd
-from pytrends.request import TrendReq
 import keys as conf
 
 news_train_topic = "news-train"
@@ -24,25 +22,9 @@ newscather_headers = {
 }
 
 newscather_daily_limit = 1000
-times_per_day = 1
-max_query_strings = 7
+times_per_day = 10
 
 time_string_format = "%Y-%m-%d %H:%M:%S"
-
-pytrend = TrendReq()
-trendingSearches = pytrend.trending_searches() 
-arr= trendingSearches.iloc[:,0].values
-query_str = ""
-stopSize = len(arr)
-if(stopSize > max_query_strings):
-	stopSize = max_query_strings
-
-for i in range(stopSize):
-    query_str = query_str + arr[i] 
-    if(stopSize -1 > i):
-      query_str = query_str + " || "
-
-print("Query string for API: " + str(query_str))
 
 def format_article_date_time(t, datetime):
     return datetime.strptime(t, "%Y-%m-%d %H:%M:%S")
@@ -132,8 +114,8 @@ producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
 queue = Queue(topic=news_train_topic, producer=producer)
 # scheduler code starts
 def get_data_from_apis():
-	queue.enqueue(get_free_news_response, query_str, free_news_url, free_news_headers, requests, time, free_news_daily_limit/times_per_day, handle_error_response, format_response, isLimtReached, time_string_format, datetime)
-	queue.enqueue(get_newscather_response, query_str, newscather_url, newscather_headers, requests, time, newscather_daily_limit/times_per_day, handle_error_response, format_response, isLimtReached, time_string_format, datetime)
+	queue.enqueue(get_free_news_response, "*", free_news_url, free_news_headers, requests, time, free_news_daily_limit/times_per_day, handle_error_response, format_response, isLimtReached, time_string_format, datetime)
+	queue.enqueue(get_newscather_response, "*", newscather_url, newscather_headers, requests, time, newscather_daily_limit/times_per_day, handle_error_response, format_response, isLimtReached, time_string_format, datetime)
 
 	producer.flush()
 	
