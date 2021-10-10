@@ -24,7 +24,7 @@ https://docs.google.com/document/d/12yBr9iS_2Y7TUdLg-8Pu-fC3epiNBLcLnXRKi2ezRB4/
 
 1.  Environment details:
 
-    - Database: Free MongoDB atlas could database
+    - Database: Free MongoDB database on could 
     - Streaming: Apache Kafka
 
 2.  What goes in as an input:
