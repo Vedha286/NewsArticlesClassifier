@@ -6,7 +6,7 @@
 
 https://github.com/Vedha286/NewsArticlesClassifier/blob/main/documents/IIIT%20H%20Capstone%20Project%20-%20News%20articles%20classifier.pdf
 
-# Week 1- Data Ingestion
+# Milestone 1- Data Ingestion - Look at `milestone1` branch
 
 ## Architectural Design
 
