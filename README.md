@@ -1,6 +1,6 @@
 # NewsArticlesClassifier
 
-#### Group 10 - **Vedha Krishna Velthapu and P Manish**
+#### Hack Elite - **Vedha Krishna Velthapu and P Manish**
 
 ## Problem Statement
 https://github.com/Vedha286/NewsArticlesClassifier/blob/main/documents/IIIT%20H%20Capstone%20Project%20-%20News%20articles%20classifier.pdf
@@ -19,12 +19,12 @@ https://docs.google.com/document/d/12yBr9iS_2Y7TUdLg-8Pu-fC3epiNBLcLnXRKi2ezRB4/
 
 1. Environment details:
    
-   - Database: We made use of the free ongodb atlas could database
+   - Database: We made use of the free Mongodb atlas could database
    - Streaming: Apache Kafka
 
 2. What goes in as an input:
    
-   The data we get from our APIs is our input for this milestone. We made use of the free news api and the newscather api. Since it is impossible to get every possible news articles, we get the daily top 5 trending keywords on google using the google trends api service, for the query keywords to make the API calls. This was done so we don't have to hard code the keywords and also get the most relavent keywords to get news on.
+   The data we get from our APIs is our input for this milestone. We made use of the free news api and the newscatcher api. Since it is impossible to get every possible news articles, we get the daily top 5 trending keywords on google using the google trends api service, for the query keywords to make the API calls. This was done so we don't have to hard code the keywords and also get the most relavent keywords to get news on.
    
 3. How the input is being processed:
    
