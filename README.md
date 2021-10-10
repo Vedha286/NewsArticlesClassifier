@@ -83,4 +83,4 @@ https://docs.google.com/document/d/12yBr9iS_2Y7TUdLg-8Pu-fC3epiNBLcLnXRKi2ezRB4/
       
          Finding a good source to get news articles from as most of the sources/apis were paid
          
-         Solution: After a lot of research we found 1 api we can use and the free news api provided worked for us.
+         Solution: After a lot of research we found 1 api we can use and the free news api provided, worked for us.
