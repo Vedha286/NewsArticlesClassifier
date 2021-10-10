@@ -49,6 +49,7 @@ https://docs.google.com/document/d/12yBr9iS_2Y7TUdLg-8Pu-fC3epiNBLcLnXRKi2ezRB4/
    ![image](https://user-images.githubusercontent.com/55736158/136675367-139481b2-60f3-4a75-abd6-2b13b9fb008f.png)
 
 5. Challenges encountered and the way you tackled them:
+
    **Problem 1:**
           
          Lack of understanding on Kafka and kafka queues
