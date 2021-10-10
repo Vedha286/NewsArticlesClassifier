@@ -24,7 +24,7 @@ newscather_headers = {
 
 newscather_daily_limit = 1000
 times_per_day = 1
-max_query_strings = 5
+max_query_strings = 10
 
 time_string_format = "%Y-%m-%d %H:%M:%S"
 
@@ -83,7 +83,7 @@ def handle_error_response(response):
     if("status" in response):
         if(response["status"] == 'ok'):
             return response
-    print(response)
+    print("Response error: " + str(response))
     return None
 
 def format_response(article, time_string_format, datetime):
@@ -138,7 +138,8 @@ def get_data_from_apis():
 	
 
 # After an interval calling the below functions
-schedule.every(24/times_per_day).hours.do(get_data_from_apis)
+schedule.every(24/times_per_day).seconds.do(get_data_from_apis)
+#schedule.every(24/times_per_day).hours.do(get_data_from_apis)
 
 while True:
     schedule.run_pending()
