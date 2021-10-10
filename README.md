@@ -2,7 +2,7 @@
 
 #### Group 10 - **Vedha Krishna Velthapu and P Manish**
 
-### Problem Statement:
+## Problem Statement
 https://github.com/Vedha286/NewsArticlesClassifier/blob/main/documents/IIIT%20H%20Capstone%20Project%20-%20News%20articles%20classifier.pdf
 
 
@@ -11,7 +11,7 @@ https://github.com/Vedha286/NewsArticlesClassifier/blob/main/documents/IIIT%20H%
 ## Architectural Design
 https://github.com/Vedha286/NewsArticlesClassifier/blob/week1/documents/architectural-design.png
 
-## Planning Document:
+## Planning Document
 https://docs.google.com/document/d/12yBr9iS_2Y7TUdLg-8Pu-fC3epiNBLcLnXRKi2ezRB4/edit?usp=sharing
 
 ## Report
@@ -40,6 +40,6 @@ https://docs.google.com/document/d/12yBr9iS_2Y7TUdLg-8Pu-fC3epiNBLcLnXRKi2ezRB4/
    ![image](https://user-images.githubusercontent.com/55736158/136675367-139481b2-60f3-4a75-abd6-2b13b9fb008f.png)
 
 5. Challenges encountered and the way you tackled them
-   - Lack of understanding on Kafka
-   - Coordinating and working together between different time zones
-   - Find a good source to get data from as most of the sources were paid
+   - Lack of understanding on Kafka -> Spliting the task so 1 person focus solely on Kafka until it is set up, instead of 2 people working on it together helped us. We managed to finish the other tasks alone with Kafka
+   - Coordinating and working together between different time zones -> Communicating reqularly and meeting every 2-3 days to have alignment on our tasks
+   - Find a good source to get data from as most of the sources were paid -> after a lot of research we found 1 api we can use and the free news api provided worked for us.
