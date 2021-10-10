@@ -19,7 +19,7 @@ free_news_daily_limit = 100
 
 newscather_url = "https://api.newscatcherapi.com/v2/search"
 newscather_headers = {
-    'x-api-key': "5rFJMD3k9h-EPR02GDjEb_3M7eJeJNpEg5Hv7rW15T0"
+    'x-api-key': "HDKy1I5lee16dLsWghX220ThukgRgfi7OdQZpyzL8Vo"
 }
 
 newscather_daily_limit = 1000
