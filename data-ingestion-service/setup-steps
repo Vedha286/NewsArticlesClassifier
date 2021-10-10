@@ -14,7 +14,7 @@ In terminal 2:
 ./kafka_2.12-3.0.0/bin/kafka-server-start.sh ./kafka_2.12-3.0.0/config/server.properties
 
 
-In terminal 3:
+In terminal 3 (run all the steps below on terminal 3):
 ./kafka_2.12-3.0.0/bin/kafka-topics.sh --list --bootstrap-server localhost:9092
 
 ./kafka_2.12-3.0.0/bin/zookeeper-server-start.sh -daemon ./kafka_2.12-3.0.0/config/zookeeper.properties
