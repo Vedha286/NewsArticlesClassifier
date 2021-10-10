@@ -13,8 +13,7 @@ https://docs.google.com/document/d/12yBr9iS_2Y7TUdLg-8Pu-fC3epiNBLcLnXRKi2ezRB4/
 # Week 1- Data Ingestion
 
 ## Architectural Design
-
-.......NewsArticlesClassifier\documents\architectural-design-1.png
+https://github.com/Vedha286/NewsArticlesClassifier/blob/week1/documents/architectural-design.png
 
 ## Report
 
