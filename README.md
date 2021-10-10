@@ -16,15 +16,21 @@ https://docs.google.com/document/d/12yBr9iS_2Y7TUdLg-8Pu-fC3epiNBLcLnXRKi2ezRB4/
 
 ## Report
 
-1. Environment details
+1. Environment details:
+   
    - Database: We made use of the free ongodb atlas could database
    - Streaming: Apache Kafka
-2. What goes in as an input
+
+2. What goes in as an input:
+   
    The data we get from our APIs is our input for this milestone. We made use of the free news api and the newscather api. Since it is impossible to get every possible news articles, we get the daily top 5 trending keywords on google using the google trends api service, for the query keywords to make the API calls. This was done so we don't have to hard code the keywords and also get the most relavent keywords to get news on.
-3. How the input is being processed
+   
+3. How the input is being processed:
+   
    - We validate that all the fields we needs is in returned by the API (`published-date`,`topic/category`,`title`,`summary`, and `source`).
    - Both the APIs we used had a `news` category which we changed to `general news` before the article is stored in the database to reduce some ambiguity.
-4. What comes out as an output
+   
+4. What comes out as an output:
 
    Strutured data stored in our database with the following columns:
 
@@ -39,7 +45,8 @@ https://docs.google.com/document/d/12yBr9iS_2Y7TUdLg-8Pu-fC3epiNBLcLnXRKi2ezRB4/
    
    ![image](https://user-images.githubusercontent.com/55736158/136675367-139481b2-60f3-4a75-abd6-2b13b9fb008f.png)
 
-5. Challenges encountered and the way you tackled them
+5. Challenges encountered and the way you tackled them:
+
    - Lack of understanding on Kafka -> Spliting the task so 1 person focus solely on Kafka until it is set up, instead of 2 people working on it together helped us. We managed to finish the other tasks alone with Kafka
    - Coordinating and working together between different time zones -> Communicating reqularly and meeting every 2-3 days to have alignment on our tasks
    - Find a good source to get data from as most of the sources were paid -> after a lot of research we found 1 api we can use and the free news api provided worked for us.
