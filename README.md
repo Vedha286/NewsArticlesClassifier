@@ -1,6 +1,6 @@
 # NewsArticlesClassifier
 
-#### Hack Elite - **Vedha Krishna Velthapu and P Manish**
+#### Hack Elite(Group 10) - **Vedha Krishna Velthapu and P Manish**
 
 ## Problem Statement
 
