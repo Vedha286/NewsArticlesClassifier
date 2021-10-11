@@ -17,13 +17,14 @@ https://github.com/Vedha286/NewsArticlesClassifier/blob/milestone1/documents/arc
 ## Planning Document
 
 https://docs.google.com/document/d/12yBr9iS_2Y7TUdLg-8Pu-fC3epiNBLcLnXRKi2ezRB4/edit?usp=sharing
+
 **Note: The table in the document shows exactly what is implemented and what was completed, as well as who was incharge of what task.**
 
 ## Report
 
 1.  Environment details:
 
-    - Database: Free MongoDB atlas could database
+    - Database: Free MongoDB database on cloud 
     - Streaming: Apache Kafka
 
 2.  What goes in as an input:
