@@ -1,9 +1,10 @@
 wget https://downloads.apache.org/kafka/3.0.0/kafka_2.12-3.0.0.tgz
 
 tar -xvf kafka_2.12-3.0.0.tgz
-sudo apt install openjdk-8-jdk -y
-java -version
 
+sudo apt install openjdk-8-jdk -y
+
+java -version
 
 In terminal 1:
 ./kafka_2.12-3.0.0/bin/zookeeper-server-start.sh ./kafka_2.12-3.0.0/config/zookeeper.properties
@@ -13,8 +14,7 @@ In terminal 2:
 ./kafka_2.12-3.0.0/bin/kafka-server-start.sh ./kafka_2.12-3.0.0/config/server.properties
 
 
-
-In terminal 3:
+In terminal 3 (run all the steps below on terminal 3):
 ./kafka_2.12-3.0.0/bin/kafka-topics.sh --list --bootstrap-server localhost:9092
 
 ./kafka_2.12-3.0.0/bin/zookeeper-server-start.sh -daemon ./kafka_2.12-3.0.0/config/zookeeper.properties
@@ -23,9 +23,9 @@ In terminal 3:
 
 ps -ef | grep kafka
 
-./kafka_2.12-3.0.0/bin/kafka-topics.sh --create --bootstrap-server 127.0.0.1:9092 --replication-factor 1 --partitions 1 --topic susy-train
+./kafka_2.12-3.0.0/bin/kafka-topics.sh --create --bootstrap-server 127.0.0.1:9092 --replication-factor 1 --partitions 1 --topic news-train
 
-./kafka_2.12-3.0.0/bin/kafka-topics.sh --describe --bootstrap-server 127.0.0.1:9092 --topic susy-train
+./kafka_2.12-3.0.0/bin/kafka-topics.sh --describe --bootstrap-server 127.0.0.1:9092 --topic news-train
 
 
 
