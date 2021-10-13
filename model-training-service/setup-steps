@@ -1,0 +1,14 @@
+!wget https://dlcdn.apache.org/spark/spark-3.1.2/spark-3.1.2-bin-hadoop3.2.tgz
+
+!tar -xvf spark-3.1.2-bin-hadoop3.2.tgz
+
+!sudo apt install scala -y
+
+
+!scala -version
+
+!pip3 install pyspark==2.4.6
+!pip install findspark
+
+export PATH=$PATH:/home/<USER>/spark/bin
+export PYSPARK_PYTHON=python3
