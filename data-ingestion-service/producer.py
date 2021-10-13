@@ -22,7 +22,7 @@ newscather_headers = {
 }
 
 newscather_daily_limit = 1000
-times_per_day = 10
+times_per_day = 1
 
 time_string_format = "%Y-%m-%d %H:%M:%S"
 
@@ -121,7 +121,7 @@ def get_data_from_apis():
 	
 
 # After an interval calling the below functions
-schedule.every(24/times_per_day).seconds.do(get_data_from_apis)
+schedule.every(24/times_per_day).hours.do(get_data_from_apis)
 #schedule.every(24/times_per_day).hours.do(get_data_from_apis)
 
 while True:
