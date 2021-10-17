@@ -6,6 +6,60 @@
 
 https://github.com/Vedha286/NewsArticlesClassifier/blob/main/documents/IIIT%20H%20Capstone%20Project%20-%20News%20articles%20classifier.pdf
 
+## Planning Document
+
+https://docs.google.com/document/d/12yBr9iS_2Y7TUdLg-8Pu-fC3epiNBLcLnXRKi2ezRB4/edit?usp=sharing
+
+# Milestone 2- Model Training (cleaning + preprocessing of data)
+
+#### `milestone2` branch
+
+## Report
+
+1.  Environment details:
+
+    - Database: Free MongoDB database on cloud
+    - Data processing: PySpark 
+
+2.  What goes in as an input:
+
+    The data from our database what we collected from milestone 1.
+
+3.  How the input is being processed:
+
+- ......
+
+4.  What comes out as an output:
+
+    ......
+
+5.  Challenges encountered and the way you tackled them:
+
+    **Problem 1:**
+
+         Getting data from our mongodb database using pyspark
+
+         Solution: 
+
+    **Problem 2:**
+
+         Find an appropriate model for our problem, as we wanted to process our data to work for that specific model
+
+         Solution: 
+
+
+## Running Instructions
+
+1.  Create a fork of the repo using the `fork` button.
+2.  Clone your fork using git clone `https://github.com/Vedha286/NewsArticlesClassifier.git`
+3.  Change to `milestone2` branch.
+4.  To setup kafka follow the steps https://github.com/Vedha286/NewsArticlesClassifier/blob/milestone2/model-training-service/setup-steps
+5.  Change directory: `cd model-training-service`
+8.  Install dependencies using: `pip3 install -r requirements.txt`
+9.  Run code: `python3 get_data.py`
+
+
+
 # Milestone 1- Data Ingestion
 
 #### `milestone1` branch
