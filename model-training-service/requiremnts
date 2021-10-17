@@ -1,1 +1,7 @@
-pip install kafka-python
+kafka-python
+pyspark==2.4.6
+findspark
+pymongo
+nltk
+pandas
+sklearn

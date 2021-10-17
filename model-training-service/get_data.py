@@ -17,7 +17,8 @@ newsArticlesArr = []
 for newsArticle in newsArticles:
 	newsArticlesArr.append(newsArticle)
 
-print('Got data')
+print('Got ' + str(len(newsArticlesArr)) + ' records')
+
 df = spark.createDataFrame(newsArticlesArr)
 
 rddX = df.rdd.map(lambda x: str(x['title']) + ' ' + str(x['summary']))
@@ -25,13 +26,12 @@ rddX = rddX.map(lambda x: RemoveNonEnglishWords(x))
 print('Removed non english words')
 
 X = Vectorize(rddX.collect())
-print('Vectorized X data:')
+print('Vectorized X data shape:')
 print(X.shape)
 
-
 rddY = df.rdd.map(lambda x: str(x['category']))
-print('Y data:')
-print(rddY.collect())
+print('Y data shape (showing top 5):')
+print(rddY.collect()[:5])
 
 
 
