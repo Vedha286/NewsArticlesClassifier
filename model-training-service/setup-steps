@@ -12,3 +12,12 @@
 
 export PATH=$PATH:/home/<USER>/spark/bin
 export PYSPARK_PYTHON=python3
+
+
+./kafka_2.12-3.0.0/bin/kafka-topics.sh --create --bootstrap-server 127.0.0.1:9092 --replication-factor 1 --partitions 1 --topic news-articles
+
+ ./kafka_2.12-3.0.0/bin/kafka-topics.sh --describe --bootstrap-server 127.0.0.1:9092 --topic news-articles
+
+ wget https://repo1.maven.org/maven2/org/apache/spark/spark-streaming-kafka-0-8-assembly_2.11/2.4.6/spark-streaming-kafka-0-8-assembly_2.11-2.4.6.jar
+
+spark-submit --jars spark-streaming-kafka-0-8-assembly_2.11-2.4.6.jar data_cleaning.py

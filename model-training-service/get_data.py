@@ -4,6 +4,9 @@ from pyspark.sql import SparkSession
 from pyspark.streaming import StreamingContext   
 from pyspark.sql import SQLContext
 
+def handle_rdd(rdd):
+	if not rdd.isEmpty():
+		print(rdd)
 
 mongodb_connection_string = "mongodb+srv://IIITH-group10:LeoEXtI5sxntXmpG@cluster0.jejzt.mongodb.net/news?retryWrites=true&w=majority"
 
@@ -25,10 +28,11 @@ for newsArticle in newsArticles:
 #df = spark.createDataFrame(newsArticlesArr)
 
 #df.show()
-
+print(len(newsArticlesArr))
 rdd = spark.sparkContext.parallelize(newsArticlesArr)
 dfFromRDD1 = rdd.toDF()
 dfFromRDD1.printSchema()
+rdd.foreachRDD(handle_rdd)
 
 
 
