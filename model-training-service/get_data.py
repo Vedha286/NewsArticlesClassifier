@@ -9,7 +9,7 @@ spark = SparkSession.builder.appName("newsClassifier").getOrCreate()
 spark.sparkContext.setLogLevel('WARN')
 
 
-def getData():
+def get_data():
 	try:
 		client = MongoClient(mongodb_connection_string)
 		db = client.news
@@ -42,3 +42,4 @@ def getData():
 		print("Error getting data")
        		return null     
 
+get_data()
