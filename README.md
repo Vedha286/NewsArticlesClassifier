@@ -20,6 +20,7 @@ https://docs.google.com/document/d/12yBr9iS_2Y7TUdLg-8Pu-fC3epiNBLcLnXRKi2ezRB4/
 
     - Database: Free MongoDB database on cloud
     - Data processing: PySpark 
+    - Data cleaning: nltk and sklearn's CountVectorizer (sklearn.feature_extraction.text.CountVectorizer)
 
 2.  What goes in as an input:
 
