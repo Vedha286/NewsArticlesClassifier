@@ -27,11 +27,17 @@ https://docs.google.com/document/d/12yBr9iS_2Y7TUdLg-8Pu-fC3epiNBLcLnXRKi2ezRB4/
 
 3.  How the input is being processed:
 
-- ......
+- We first fetched all the data from ou databse using pymongo and created a spark dataframe with that data.
+- To clean the X values:
+    - We concatinated the title and summary and removed all the non english words, spaces and spacial characters from the text. We used nltk and stopwords for this.
+    - Lastly we converted an array of the cleaned texts into a matrix of token counts which can be passed as input to our model. We used sklearn's CountVectorizer (sklearn.feature_extraction.text.CountVectorizer) to do this, the paramaeter for the CountVectorizer is `max_features = 5000` and `ngram_range = (1,3)`. 
+- To clean the Y values:
+    - The Y values we already cleaned and validated before inserting into the database as we knew this was an important value.
+
 
 4.  What comes out as an output:
 
-    ......
+   The output is a matrix of token counts as the X values and a list of categories as the Y values. These values can directly be passed into the model we have in mind as inputs.
 
 5.  Challenges encountered and the way you tackled them:
 
@@ -39,13 +45,13 @@ https://docs.google.com/document/d/12yBr9iS_2Y7TUdLg-8Pu-fC3epiNBLcLnXRKi2ezRB4/
 
          Getting data from our mongodb database using pyspark
 
-         Solution: 
+         Solution: Our mentor showed us a few examples which helped us get around the issue. Instead of fetching data using pyspark, we got data using pymongo and created a spark dataframe with that data to process it.
 
     **Problem 2:**
 
          Find an appropriate model for our problem, as we wanted to process our data to work for that specific model
 
-         Solution: 
+         Solution: We could not find an example of a text classifier model that accepts title, summary and date of the news article as a input, all the models just took in 1 string as input. Based on this we also decided to not pass in date as an input to train the model, and we contatinated the title and summary to form 1 string.
 
 
 ## Running Instructions
