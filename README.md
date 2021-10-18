@@ -28,17 +28,17 @@ https://docs.google.com/document/d/12yBr9iS_2Y7TUdLg-8Pu-fC3epiNBLcLnXRKi2ezRB4/
 
 3.  How the input is being processed:
 
-- We first fetched all the data from ou databse using pymongo and created a spark dataframe with that data.
-- To clean the X values:
-    - We concatinated the title and summary and removed all the non english words, spaces and spacial characters from the text. We used nltk and stopwords for this.
-    - Lastly we converted an array of the cleaned texts into a matrix of token counts which can be passed as input to our model. We used sklearn's CountVectorizer (sklearn.feature_extraction.text.CountVectorizer) to do this, the paramaeter for the CountVectorizer is `max_features = 5000` and `ngram_range = (1,3)`. 
-- To clean the Y values:
-    - The Y values we already cleaned and validated before inserting into the database as we knew this was an important value.
+    - We first fetched all the data from ou databse using pymongo and created a spark dataframe with that data.
+    To clean the title and summary values (independent values):
+        - We concatinated the title and summary and removed all the non english words, spaces and spacial characters from the text. We used nltk and stopwords for this.
+        - Lastly we converted an array of the cleaned texts into a matrix of token counts which can be passed as input to our model. We used sklearn's CountVectorizer (sklearn.feature_extraction.text.CountVectorizer) to do this, the paramaeter for the CountVectorizer is `max_features = 5000` and `ngram_range = (1,3)`. 
+    To clean the category values (dependent values):
+        - The categories we already cleaned and validated before inserting into the database as we knew this was an important value.
 
 
 4.  What comes out as an output:
 
-   The output is a matrix of token counts as the X values and a list of categories as the Y values. These values can directly be passed into the model we have in mind as inputs.
+    The output is a matrix of token counts as the independent values and a list of categories as the dependent values. These values can directly be passed into the model we have in mind as inputs.
 
 5.  Challenges encountered and the way you tackled them:
 
