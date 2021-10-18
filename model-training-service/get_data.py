@@ -38,8 +38,8 @@ def get_data():
 		print(Y.collect()[:5])
 
 		return X, Y
-	except errors.BulkWriteError as e:
-		print("Error getting data")
+	except errors as e:
+		print("Error getting data " + str(e))
        		return null     
 
 get_data()
