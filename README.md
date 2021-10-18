@@ -60,7 +60,7 @@ https://docs.google.com/document/d/12yBr9iS_2Y7TUdLg-8Pu-fC3epiNBLcLnXRKi2ezRB4/
 1.  Create a fork of the repo using the `fork` button.
 2.  Clone your fork using git clone `https://github.com/Vedha286/NewsArticlesClassifier.git`
 3.  Change to `milestone2` branch.
-4.  To setup kafka follow the steps https://github.com/Vedha286/NewsArticlesClassifier/blob/milestone2/model-training-service/setup-steps
+4.  To setup pyspark follow these steps https://github.com/Vedha286/NewsArticlesClassifier/blob/milestone2/model-training-service/setup-steps
 5.  Change directory: `cd model-training-service`
 8.  Install dependencies using: `pip3 install -r requirements.txt`
 9.  Run code: `python3 get_data.py`
