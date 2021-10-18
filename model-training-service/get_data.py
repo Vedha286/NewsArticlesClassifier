@@ -13,7 +13,7 @@ def get_data():
 	try:
 		client = MongoClient(mongodb_connection_string)
 		db = client.news
-
+		print('Getting data')
 		newsArticles = db.newsArticles.find({}, {"_id":0, "date":0, "source":0})
 		client.close() 
 
@@ -21,7 +21,7 @@ def get_data():
 		for newsArticle in newsArticles:
 			newsArticlesArr.append(newsArticle)
 
-		print('Got ' + str(len(newsArticlesArr)) + ' records')
+		print('Got ' + str(len(newsArticlesArr)) + ' records\n')
 
 		df = spark.createDataFrame(newsArticlesArr)
 
@@ -34,12 +34,12 @@ def get_data():
 		print(X.shape)
 
 		Y = df.rdd.map(lambda x: str(x['category']))
-		print('Y data shape (showing top 5):')
+		print('\nY data shape (showing top 5):')
 		print(Y.collect()[:5])
 
 		return X, Y
 	except errors as e:
 		print("Error getting data " + str(e))
-       		return null     
+		return null    
 
 get_data()
