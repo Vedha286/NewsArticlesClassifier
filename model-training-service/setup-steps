@@ -6,7 +6,8 @@
 
 !scala -version
 
-export PATH=$PATH:/home/<USER>/spark/bin
+export PATH=$PATH:/home/<USER>/spark-3.1.2-bin-hadoop3.2/bin
 export PYSPARK_PYTHON=python3
 
+wget https://downloads.apache.org/kafka/3.0.0/kafka_2.12-3.0.0.tgz
 
