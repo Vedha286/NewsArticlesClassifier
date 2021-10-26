@@ -101,7 +101,7 @@ https://docs.google.com/document/d/12yBr9iS_2Y7TUdLg-8Pu-fC3epiNBLcLnXRKi2ezRB4/
 4.  To setup pyspark follow these steps https://github.com/Vedha286/NewsArticlesClassifier/blob/milestone2/model-training-service/setup-steps
 5.  Change directory: `cd model-training-service`
 8.  Install dependencies using: `pip3 install -r requirements.txt`
-9.  Run code: `python3 get_data.py`
+9.  Run code: `spark-submit --jars spark=streaming-kafka-0-8-assembly_2.11-2.4.3.jar get_data.py`
 
 
 
