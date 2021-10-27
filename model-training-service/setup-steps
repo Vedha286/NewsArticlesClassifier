@@ -11,3 +11,5 @@ export PYSPARK_PYTHON=python3
 
 wget https://downloads.apache.org/kafka/3.0.0/kafka_2.12-3.0.0.tgz
 
+
+python3 -m nltk.downloader stopwords

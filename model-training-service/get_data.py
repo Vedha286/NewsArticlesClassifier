@@ -29,7 +29,7 @@ def get_data():
 		rddX = rddX.map(lambda x: RemoveNonEnglishWords(x))
 		print('Removed non english words')
 
-		X = Vectorize(rddX.collect())
+		X = rddX.collect() # Vectorize(rddX.collect())
 		print('Vectorized X data shape:')
 		print(X.shape)
 
