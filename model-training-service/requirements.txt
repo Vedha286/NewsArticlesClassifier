@@ -6,3 +6,8 @@ pymongo
 nltk
 pandas
 sklearn
+scipy
+matplotlib
+pickle
+numpy
+re
