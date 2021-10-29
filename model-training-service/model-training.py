@@ -147,5 +147,5 @@ max_accuracy = max(accuracies)
 model_index = accuracies.index(max_accuracy)
 models[model_index].fit(model_train_data[model_index][0], model_train_data[model_index][1])
 
-news_model_file = "E:/IIITH/capstone project/NewsArticlesClassifier/model-training-service/models/news_nb.pkl"
+news_model_file = "../models/news_nb.pkl"
 pickle.dump(models[model_index], open(news_model_file, "wb"))
