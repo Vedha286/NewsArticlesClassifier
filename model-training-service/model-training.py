@@ -1,16 +1,14 @@
-import re
-from pymongo import MongoClient, errors
-
-import pickle
-
-from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
-
+from sklearn.model_selection import train_test_split
 from sklearn.pipeline import make_pipeline
 from sklearn.metrics import accuracy_score
+
+from pymongo import MongoClient, errors
+
+import pickle
 
 news_topics = {0: "general news", 1: "sport", 2: "tech", 3: "entertainment", 4: "finance", 5: "politics", 6: "business", 7: "economics", 
                8: "world", 9: "beauty", 10: "gaming", 11:"science", 12:"travel", 13:"energy", 14:"music", 15:"food"}
@@ -45,12 +43,8 @@ for i in range(0, len(newsArticlesArr)):
 print("corpus len: " + str(len(corpus)))
 print("=================================")
 
-
-# y=true_preds
-
 print("=================================")
 
-# y = [r_news_topics[d] for d in y]
 X_train, X_test, y_train, y_test = train_test_split(corpus, true_preds, test_size=0.3)
 tfidf = TfidfVectorizer(ngram_range=(1, 3), stop_words='english')
 
@@ -98,7 +92,6 @@ for i in range(0, len(models)):
 
 max_accuracy = max(accuracies)
 model_index = accuracies.index(max_accuracy)
-
 
 news_model_file = "../models/news_nb.pkl"
 pickle.dump(models[model_index], open(news_model_file, "wb"))

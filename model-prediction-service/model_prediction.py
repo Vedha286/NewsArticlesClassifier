@@ -8,7 +8,7 @@ news_topics = {0: "general news", 1: "sport", 2: "tech", 3: "entertainment", 4: 
                8: "world", 9: "beauty", 10: "gaming", 11:"science", 12:"travel", 13:"energy", 14:"music", 15:"food"}
 
 r_news_topics = {y: x for x, y in news_topics.items()}
-news_model_file = "E:/IIITH/capstone project/NewsArticlesClassifier/model-training-service/models/news_nb.pkl"
+news_model_file = "../models/news_nb.pkl"
 model = pickle.load(open(news_model_file, "rb"))
 
 def predict(sentence):
