@@ -6,6 +6,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import make_pipeline
 from sklearn.metrics import accuracy_score
 
+import mlflow
+import mlflow.sklearn
+from mlflow.models.signature import infer_signature
+
 from pymongo import MongoClient, errors
 
 import pickle
@@ -76,7 +80,7 @@ models_names = [
 
 accuracies = []
 
-for i in range(0, len(models)):
+for i in range(0, 1):
       print("Training model: " + models_names[i])
       models[i].fit(X_train,  y_train)
       
@@ -92,6 +96,14 @@ for i in range(0, len(models)):
 
 max_accuracy = max(accuracies)
 model_index = accuracies.index(max_accuracy)
+print("index: " + str(model_index))
+#news_model_file = "../models/news_nb.pkl"
+#pickle.dump(models[model_index], open(news_model_file, "wb"))
 
-news_model_file = "../models/news_nb.pkl"
-pickle.dump(models[model_index], open(news_model_file, "wb"))
+news_model_location = "../models-mlflow"
+mlflow.sklearn.save_model(models[model_index], news_model_location, serialization_format = mlflow.sklearn.SERIALIZATION_FORMAT_PICKLE)
+
+print("saved model")
+
+
+

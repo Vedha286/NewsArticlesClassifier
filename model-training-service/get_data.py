@@ -6,7 +6,7 @@ from prepare_data import RemoveNonEnglishWords, Vectorize
 
 mongodb_connection_string = "mongodb+srv://IIITH-group10:LeoEXtI5sxntXmpG@cluster0.jejzt.mongodb.net/news?retryWrites=true&w=majority"
 spark = SparkSession.builder.appName("newsClassifier").getOrCreate()
-spark.sparkContext.setLogLevel('WARN')
+# spark.sparkContext.setLogLevel('WARN')
 
 
 def get_data():

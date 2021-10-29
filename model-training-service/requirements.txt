@@ -2,12 +2,13 @@ kafka-python
 pyspark==2.4.6
 findspark
 pymongo
-"pymongo[srv]"
 nltk
 pandas
 sklearn
 scipy
-matplotlib
 pickle
 numpy
-re
+mlflow==1.21.0
+scikit-learn==0.23.2
+cloudpickle==1.6.0
+mlflow-skinny

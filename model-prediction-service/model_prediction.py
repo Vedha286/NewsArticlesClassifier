@@ -2,14 +2,17 @@ import pickle
 
 from nltk.stem.porter import PorterStemmer
 from nltk.corpus import stopwords
-import re
+import mlflow.sklearn
 
 news_topics = {0: "general news", 1: "sport", 2: "tech", 3: "entertainment", 4: "finance", 5: "politics", 6: "business", 7: "economics", 
                8: "world", 9: "beauty", 10: "gaming", 11:"science", 12:"travel", 13:"energy", 14:"music", 15:"food"}
 
 r_news_topics = {y: x for x, y in news_topics.items()}
 news_model_file = "../models/news_nb.pkl"
-model = pickle.load(open(news_model_file, "rb"))
+# model = pickle.load(open(news_model_file, "rb"))
+
+news_model_location = "../models-mlflow"
+model = mlflow.sklearn.load_model(news_model_location)
 
 def predict(sentence):
       y = model.predict([sentence])
