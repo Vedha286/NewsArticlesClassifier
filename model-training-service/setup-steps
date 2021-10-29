@@ -14,3 +14,10 @@ wget https://downloads.apache.org/kafka/3.0.0/kafka_2.12-3.0.0.tgz
 
 python3 -m nltk.downloader stopwords
 python3 -m nltk.downloader punkt   
+
+useful links
+https://spark.apache.org/docs/latest/ml-pipeline.html
+https://spark.apache.org/docs/latest/ml-tuning.html
+https://colab.research.google.com/drive/1-G7Yshollnjx9UhDykwED51HbvFB_gl6#scrollTo=o50Kda_Hw-_G&uniqifier=1
+
+https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.ml.Pipeline.html
