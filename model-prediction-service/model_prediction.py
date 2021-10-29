@@ -8,25 +8,12 @@ news_topics = {0: "general news", 1: "sport", 2: "tech", 3: "entertainment", 4: 
                8: "world", 9: "beauty", 10: "gaming", 11:"science", 12:"travel", 13:"energy", 14:"music", 15:"food"}
 
 r_news_topics = {y: x for x, y in news_topics.items()}
-
-ps = PorterStemmer()
-
-def remove_non_english_words(word):
-      review = re.sub('[^a-zA-Z0-9]', ' ', word)
-      review = review.lower()
-      review = review.split()
-
-      review = [ps.stem(word) for word in review if not word in stopwords.words('english')]
-      review = ' '.join(review)
-      return review
+news_model_file = "E:/IIITH/capstone project/NewsArticlesClassifier/model-training-service/models/news_nb.pkl"
+model = pickle.load(open(news_model_file, "rb"))
 
 def predict(sentence):
-      sentence = remove_non_english_words(sentence)
-
-      news_model_file = "E:/IIITH/capstone project/NewsArticlesClassifier/model-training-service/models/news_nb.pkl"
-      model = pickle.load(open(news_model_file, "rb"))
       y = model.predict([sentence])
-      return news_topics[y[0]]
+      return y[0]
 
 y = predict("festivals of India Pictures: festivals of India Photos / Images The country's largest public sector bank, the State Bank of India (SBI) has announced that as part of its festive season scheme, it will be offering credit score linked home loans at 6.7%, irrespective of the loan amount. SBI has also waived processing fees on home loans. Click here to know how to avail SBI home loan.more23 Sep, 2021, 02.10 PM IST21 Sep, 2021, 10.25 AM ISTThe first prototype train of the Kanpur and Agra Metro projects has been inaugurated by Uttar Pradesh Chief Minister Yogi Adi")
 print(y)

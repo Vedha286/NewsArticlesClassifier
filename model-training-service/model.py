@@ -1,8 +1,6 @@
 import pandas as pd
-import nltk
 import re
 from scipy import spatial
-import matplotlib.pyplot as plt
 from pymongo import MongoClient, errors
 
 import pickle
@@ -136,18 +134,6 @@ preds_count = [y.count(label) for label in label_names]
 print(preds_count)
 print("=================================")
 
-
-fig = plt.figure(figsize = (20, 5))
- 
-# creating the bar plot
-plt.bar(label_names, preds_count, color ='blue', width = 0.4)
- 
-plt.xlabel("Topics")
-plt.ylabel("No. of news")
-plt.title("News for different topics")
-plt.show()
-
-
 y = [r_news_topics[d] for d in y]
 X_train, X_test, y_train, y_test = train_test_split(corpus, y, test_size=0.3)
 
@@ -158,21 +144,21 @@ MultinomialNB_acc = accuracy_score(y_test, MultinomialNB_preds)
     
 print(f"MultinomialNB Classifier trained with accuracy: " + str(MultinomialNB_acc))
 
-svm_linear_model = make_pipeline(TfidfVectorizer(), SVC(kernel = 'linear',gamma=0.5, C = 1.2))
+svm_linear_model = make_pipeline(TfidfVectorizer(), SVC(kernel = 'linear',gamma=1, C = 1.2))
 svm_linear_model.fit(X_train, y_train)
 svm_predictions_linear = svm_linear_model.predict(X_test)
 svm_model_linear_acc = accuracy_score(y_test, svm_predictions_linear)
     
 print(f"svm linear Classifier trained with accuracy: " + str(svm_model_linear_acc))
 
-svm_model_rbf_model = make_pipeline(TfidfVectorizer(), SVC(kernel = 'rbf',gamma=0.5, C = 1.2))
+svm_model_rbf_model = make_pipeline(TfidfVectorizer(), SVC(kernel = 'rbf',gamma=1, C = 1))
 svm_model_rbf_model.fit(X_train, y_train)
 svm_predictions_rbf = svm_model_rbf_model.predict(X_test)
 svm_model_rbf_acc = accuracy_score(y_test, svm_predictions_rbf)
     
 print(f"svm rbf Classifier trained with accuracy: " + str(svm_model_rbf_acc))
 
-svm_model_sigmoid_model = make_pipeline(TfidfVectorizer(), SVC(kernel='sigmoid', gamma=0.5, C=1.5))
+svm_model_sigmoid_model = make_pipeline(TfidfVectorizer(), SVC(kernel='sigmoid', gamma=1, C=1.5))
 svm_model_sigmoid_model.fit(X_train, y_train)
 svm_predictions_sigmoid = svm_model_sigmoid_model.predict(X_test)
 svm_model_sigmoid_acc = accuracy_score(y_test, svm_predictions_sigmoid)
