@@ -9,10 +9,8 @@ news_topics = {0: "general news", 1: "sport", 2: "tech", 3: "entertainment", 4: 
 
 r_news_topics = {y: x for x, y in news_topics.items()}
 news_model_file = "../models/news_nb.pkl"
-# model = pickle.load(open(news_model_file, "rb"))
-
-news_model_location = "../models-mlflow"
-model = mlflow.sklearn.load_model(news_model_location)
+news_model_file = "E:/IIITH/capstone project/NewsArticlesClassifier/models/news_nb.pkl"
+model = pickle.load(open(news_model_file, "rb"))
 
 def predict(sentence):
       y = model.predict([sentence])
