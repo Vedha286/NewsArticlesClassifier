@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
-from model_training import train, load_model
+from get_data_1 import train, load_model
 
 app = FastAPI(title="trainr", docs_url="/")
 app.add_event_handler("startup", load_model)

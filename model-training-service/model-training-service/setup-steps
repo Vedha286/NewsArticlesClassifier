@@ -1,0 +1,33 @@
+!wget https://dlcdn.apache.org/spark/spark-3.1.2/spark-3.1.2-bin-hadoop3.2.tgz
+
+!tar -xvf spark-3.1.2-bin-hadoop3.2.tgz
+
+!sudo apt install scala -y
+
+!scala -version
+
+export PATH=$PATH:/home/<USER>/spark-3.1.2-bin-hadoop3.2/bin
+export PYSPARK_PYTHON=python3
+
+wget https://search.maven.org/remotecontent?filepat=org/apache/spark/spark-streaming-kafka-0-8-assembly_2.11/2.4.8/spark-streaming-kafka-0-8-assembly_2.11-2.4.8.jar
+
+wget https://repo1.maven.org/maven2/org/apache/spark/spark-streaming-kafka-0-8-assembly_2.11/2.4.8/spark-streaming-kafka-0-8-assembly_2.11-2.4.8.jar
+
+
+wget https://repo1.maven.org/maven2/org/mongodb/spark/mongo-spark-connector_2.11/2.4.8/mongo-spark-connector_2.11-2.4.8-assembly.jar
+
+pyspark --packages org.mongodb.spark:mongo-spark-connector_2.11:2.4.1
+
+
+python3 -m nltk.downloader stopwords
+python3 -m nltk.downloader punkt   
+
+useful links
+https://spark.apache.org/docs/latest/ml-pipeline.html
+https://spark.apache.org/docs/latest/ml-tuning.html
+https://colab.research.google.com/drive/1-G7Yshollnjx9UhDykwED51HbvFB_gl6#scrollTo=o50Kda_Hw-_G&uniqifier=1
+
+https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.ml.Pipeline.html
+
+
+https://www.mlflow.org/docs/latest/tracking.html#file-store-performance
