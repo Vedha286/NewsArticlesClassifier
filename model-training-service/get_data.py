@@ -1,8 +1,10 @@
 from pymongo import MongoClient, errors
-from pyspark import SparkContext
+
 from pyspark.sql import SparkSession
 from pyspark.streaming import StreamingContext   
 from prepare_data import RemoveNonEnglishWords, Vectorize
+from pyspark import SparkContext
+
 
 mongodb_connection_string = "mongodb+srv://IIITH-group10:LeoEXtI5sxntXmpG@cluster0.jejzt.mongodb.net/news?retryWrites=true&w=majority"
 spark = SparkSession.builder.appName("newsClassifier").getOrCreate()
@@ -29,7 +31,7 @@ def get_data():
 		rddX = rddX.map(lambda x: RemoveNonEnglishWords(x))
 		print('Removed non english words')
 
-		X = Vectorize(rddX.collect())
+		X = rddX.collect() # Vectorize(rddX.collect())
 		print('Vectorized X data shape:')
 		print(X.shape)
 
