@@ -118,13 +118,13 @@ def train():
 	numFolds = 5
 	evaluator = MulticlassClassificationEvaluator(labelCol="label", predictionCol="prediction", metricName="accuracy")
 
-	paramGrid_nb = ParamGridBuilder().addGrid(nb.smoothing, np.linspace(0.3, 10, 10)).build()
+	paramGrid_nb = ParamGridBuilder().addGrid(nb.smoothing, np.linspace(0.3, 10, 20)).build()
 	print("paramGrid_nb built")
 
 	paramGrid_ovr = ParamGridBuilder().addGrid(lr.maxIter, [5, 15, 20]).build()
 	print("paramGrid_ovr built")
 
-	paramGrid_rf = ParamGridBuilder().addGrid(rf.numTrees, [5, 15, 20]).build()
+	paramGrid_rf = ParamGridBuilder().addGrid(rf.numTrees, [2, 3, 4]).build()
 	print("paramGrid_rf built")
 
 	paramGrids = [
