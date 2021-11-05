@@ -48,16 +48,16 @@ accuracies = []
 best_models = []
 
 def load_model():
-      print(os.path.exists(model_dir+"ovr"))
-      print(os.path.exists(model_dir+"rf"))
-      print(os.path.exists(model_dir+"nb"))
-      if not os.path.exists(model_dir+"ovr") and not os.path.exists(model_dir+"nb") and not os.path.exists(model_dir+"rf"):
-            train()
+#      print(os.path.exists(model_dir+"ovr"))
+#      print(os.path.exists(model_dir+"rf"))
+#      print(os.path.exists(model_dir+"nb"))
+#      if not os.path.exists(model_dir+"ovr") and not os.path.exists(model_dir+"nb") and not os.path.exists(model_dir+"rf"):
+       train()
 def train():
         client = MongoClient(mongodb_connection_string)
         db = client.news
         print('Getting data')
-        newsArticles = db.newsArticles.find({}, {"_id":0, "date":0, "source":0}).limit(10)
+        newsArticles = db.newsArticles.find({}, {"_id":0, "date":0, "source":0}).limit(10000)
         client.close()
         newsArticlesArr = []
         for newsArticle in newsArticles:
@@ -98,7 +98,7 @@ def train():
         print("=================================\n")
         numFolds = 5
         evaluator = MulticlassClassificationEvaluator(labelCol="label", predictionCol="prediction", metricName="accuracy")
-        paramGrid_nb = ParamGridBuilder().addGrid(nb.smoothing, np.linspace(5, 10, 1)).build()
+        paramGrid_nb = ParamGridBuilder().addGrid(nb.smoothing, np.linspace(5,3, 1)).build()
         
         print("paramGrid_nb built")
         paramGrid_ovr = ParamGridBuilder().addGrid(lr.maxIter, [1, 3, 2]).build()
@@ -108,17 +108,17 @@ def train():
         paramGrids = [
               paramGrid_nb, 
 #             paramGrid_rf, 
-#             paramGrid_ovr
+             paramGrid_ovr
         ]
         models = [
               nb, 
 #             rf, 
-#             ovr
+             ovr
         ]
         models_names = [
                             "nb",
 #             "rf",
-#             "ovr"
+             "ovr"
         ]
         
         for i in range(0, len(models_names)):

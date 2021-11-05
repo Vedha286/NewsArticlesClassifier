@@ -8,7 +8,7 @@ from fastapi import FastAPI, Request, Form
 
 templates = Jinja2Templates(directory="views")
 app = FastAPI(title="News Classifier", docs_url="/docs")
-#app.add_event_handler("startup", load_model)
+app.add_event_handler("startup", load_model)
 
 class NewsClassifierRetrainStatusOut(BaseModel):
     Status: str
@@ -57,4 +57,4 @@ def predict_news_category(request: Request,newsText: str = Form(...)):
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8888, reload=True)
+    uvicorn.run("main:app", host="127.0.0.1", port=8888, reload=True)

@@ -33,6 +33,7 @@ def load_model():
             model = pickle.load(open(news_model_file, "rb"))
       except Exception as e:
             print("Error:", e)
+
 def RemoveNonEnglishWords(text):
         text = str(text)
         text = re.sub('[^a-zA-Z]', ' ', text)
