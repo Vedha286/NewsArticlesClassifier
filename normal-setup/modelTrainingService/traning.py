@@ -57,7 +57,7 @@ def train():
         client = MongoClient(mongodb_connection_string)
         db = client.news
         print('Getting data')
-        newsArticles = db.newsArticles.find({}, {"_id":0, "date":0, "source":0}).limit(10)
+        newsArticles = db.newsArticles.find({}, {"_id":0, "date":0, "source":0})
         client.close()
         newsArticlesArr = []
         for newsArticle in newsArticles:
@@ -98,7 +98,7 @@ def train():
         print("=================================\n")
         numFolds = 5
         evaluator = MulticlassClassificationEvaluator(labelCol="label", predictionCol="prediction", metricName="accuracy")
-        paramGrid_nb = ParamGridBuilder().addGrid(nb.smoothing, np.linspace(0.3, 2, 1)).build()
+        paramGrid_nb = ParamGridBuilder().addGrid(nb.smoothing, np.linspace(5, 10, 1)).build()
         
         print("paramGrid_nb built")
         paramGrid_ovr = ParamGridBuilder().addGrid(lr.maxIter, [1, 3, 2]).build()
@@ -107,18 +107,18 @@ def train():
         print("paramGrid_rf built")
         paramGrids = [
               paramGrid_nb, 
-#             paramGrid_rf, 
-#             paramGrid_ovr
+             paramGrid_rf, 
+             paramGrid_ovr
         ]
         models = [
               nb, 
-#             rf, 
-#             ovr
+             rf, 
+             ovr
         ]
         models_names = [
                             "nb",
-#             "rf",
-#             "ovr"
+             "rf",
+             "ovr"
         ]
         
         for i in range(0, len(models_names)):
@@ -188,5 +188,5 @@ def train():
         print("Saved model...")
         return models_names[model_index], str(accuracies[model_index])
 
-#train()
+train()
 
