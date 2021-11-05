@@ -1,6 +1,5 @@
 
 from pymongo import MongoClient, errors
-import pickle
 import nltk
 nltk.download('stopwords')
 from nltk.corpus import stopwords
@@ -12,15 +11,15 @@ from pyspark.ml.feature import CountVectorizer
 from pyspark.ml.feature import IDF
 from pyspark.sql import SparkSession
 from pyspark.sql import Row
-from pyspark.ml.classification import NaiveBayes, RandomForestClassifier, LogisticRegression, OneVsRest, NaiveBayesModel, RandomForestClassificationModel, OneVsRestModel
+from pyspark.ml.classification import NaiveBayes, RandomForestClassifier, LogisticRegression, OneVsRest
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
 import numpy as np
 import pandas as pd
-from pyspark.ml import Pipeline, PipelineModel
+from pyspark.ml import Pipeline
 import os
 import shutil
-import mlflow
+
 ps = PorterStemmer()
 def RemoveNonEnglishWords(text):
         text = str(text)
@@ -114,7 +113,7 @@ def train():
              ovr
         ]
         models_names = [
-                            "nb",
+             "nb",
              "rf",
              "ovr"
         ]

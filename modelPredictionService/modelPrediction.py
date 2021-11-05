@@ -1,12 +1,7 @@
-import pickle
 from pyspark import SparkContext
 from pyspark.sql import SparkSession
-from pyspark.sql import Row
 from pyspark.sql import functions as sf
-from pyspark.ml import Pipeline, PipelineModel
-from pyspark.ml.feature import Tokenizer
-from pyspark.ml.feature import CountVectorizer
-from pyspark.ml.feature import IDF
+from pyspark.ml import PipelineModel
 import pandas as pd
 import numpy as np
 from pyspark.ml.classification import NaiveBayesModel, RandomForestClassificationModel, OneVsRestModel
@@ -18,8 +13,8 @@ from nltk.stem.porter import PorterStemmer
 import re
 ps = PorterStemmer()
 
-news_topics = {0: "general news", 1: "sport", 2: "tech", 3: "entertainment", 4: "finance", 5: "politics", 6: "business", 7: "economics", 
-               8: "world", 9: "beauty", 10: "gaming", 11:"science", 12:"travel", 13:"energy", 14:"music", 15:"food"}
+news_topics = {0: "General News", 1: "Sport", 2: "Tech", 3: "Entertainment", 4: "Finance", 5: "Politics", 6: "Business", 7: "economics", 
+               8: "World", 9: "Beauty", 10: "Gaming", 11:"Science", 12:"Travel", 13:"Energy", 14:"Music", 15:"Food"}
 
 r_news_topics = {y: x for x, y in news_topics.items()}
 
@@ -64,7 +59,7 @@ def predict(sentence):
 		rr = m.transform(test1)
 		return (news_topics[rr.collect()[0]["prediction"]])
 	else:
-		return ("No model")
+		return ("Error: <span class='font-weight-normal'>There is no model! Please train model again or try again after a while</span>")
 	
 
 # y = predict("festivals of India Pictures: festivals of India Photos / Images The country's largest public sector bank, the State Bank of India (SBI) has announced that as part of its festive season scheme, it will be offering credit score linked home loans at 6.7%, irrespective of the loan amount. SBI has also waived processing fees on home loans. Click here to know how to avail SBI home loan.more23 Sep, 2021, 02.10 PM IST21 Sep, 2021, 10.25 AM ISTThe first prototype train of the Kanpur and Agra Metro projects has been inaugurated by Uttar Pradesh Chief Minister Yogi Adi")

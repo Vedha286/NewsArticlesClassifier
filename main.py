@@ -1,6 +1,6 @@
 import uvicorn
 from pydantic import BaseModel
-from modelTrainingService.traning import train, load_model
+from modelTrainingService.training import train, load_model
 from modelPredictionService.modelPrediction import predict
 from starlette import requests
 from fastapi.templating import Jinja2Templates
