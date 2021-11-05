@@ -167,7 +167,7 @@ def train():
         print("=================================\n")
         print("=================================\n")
 
-        filename = 'model'+models_names[model_index]
+        filename = 'models/model'+models_names[model_index]
         if os.path.exists(filename):
                 shutil.rmtree(filename, ignore_errors=True)
         else:

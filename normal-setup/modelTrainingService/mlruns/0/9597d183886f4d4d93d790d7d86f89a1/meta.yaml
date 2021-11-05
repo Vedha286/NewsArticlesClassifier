@@ -1,0 +1,15 @@
+artifact_uri: file:///home/vedha/NewsArticlesClassifier/normal-setup/modelTrainingService/mlruns/0/9597d183886f4d4d93d790d7d86f89a1/artifacts
+end_time: 1636101587320
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: 9597d183886f4d4d93d790d7d86f89a1
+run_uuid: 9597d183886f4d4d93d790d7d86f89a1
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1636101561993
+status: 3
+tags: []
+user_id: vedha
