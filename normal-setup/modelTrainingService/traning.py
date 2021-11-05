@@ -35,11 +35,14 @@ news_topics = {0: "general news", 1: "sport", 2: "tech", 3: "entertainment", 4: 
                8: "world", 9: "beauty", 10: "gaming", 11:"science", 12:"travel", 13:"energy", 14:"music", 15:"food"}
 r_news_topics = {y: x for x, y in news_topics.items()}
 mongodb_connection_string = "mongodb+srv://IIITH-group10:LeoEXtI5sxntXmpG@cluster0.jejzt.mongodb.net/news?retryWrites=true&w=majority"
-news_model_file = "../models/news_nb.pkl"
+
+model_dir = 'models/model'
+
 def load_model():
-      try:
-            pickle.load(open(news_model_file, "rb"))
-      except Exception as e:
+      print(os.path.exists(model_dir+"ovr"))
+      print(os.path.exists(model_dir+"rf"))
+      print(os.path.exists(model_dir+"nb"))
+      if not os.path.exists(model_dir+"ovr") and not os.path.exists(model_dir+"nb") and not os.path.exists(model_dir+"rf"):
             train()
 def train():
         client = MongoClient(mongodb_connection_string)
@@ -62,7 +65,7 @@ def train():
         df = df.withColumnRenamed("_2", "label")
         df = df.na.fill("test")
         df.show(5)
-        print("partitions: " + str(df.rdd.getNumPartitions()))
+        
         tokenizer = Tokenizer(inputCol="sen", outputCol="words")
         count = CountVectorizer(inputCol="words", outputCol="rawFeatures")
         idf = IDF(inputCol="rawFeatures", outputCol="features")
@@ -76,9 +79,7 @@ def train():
         print("train")
         train.show(2)
         print("=================================\n")
-        print("partitions train: " + str(train.rdd.getNumPartitions()))
-        train.repartition(20)
-        print("partitions train: " + str(train.rdd.getNumPartitions()))
+        
         print("test")
         test.show(2)
         print("=================================\n")
@@ -88,13 +89,11 @@ def train():
         ovr = OneVsRest(classifier=lr)
         print("=================================\n")
         print("=================================\n")
-        numFolds = 5
+        
         evaluator = MulticlassClassificationEvaluator(labelCol="label", predictionCol="prediction", metricName="accuracy")
 
         print("=================================\n")
-        print("partitions train: " + str(train.rdd.getNumPartitions()))
-        train.repartition(20)
-        print("partitions train: " + str(train.rdd.getNumPartitions()))
+       
         print("test")
         test.show(2)
         print("=================================\n")
@@ -141,7 +140,7 @@ def train():
                 best_model = model.bestModel
                 
                 print(best_model.explainParams())
-                best_models.append(best_model)
+                best_models.append(model)
 
                 print("Predicting model: " + models_names[i])
                 preds = model.transform(test)
@@ -149,13 +148,11 @@ def train():
         
                 accuracy = evaluator.evaluate(preds.select("prediction", "label"))
                 accuracies.append(accuracy)
-                mlflow.log_metric('test_' + evaluator.getMetricName(), accuracy) 
-                # Log the best model.
-                mlflow.spark.log_model(spark_model=best_model, artifact_path='best-model') 
+
                 print("Accuracy of " + models_names[i] + " = %g" % accuracy)
                 print("=================================\n")
-                if os.path.exists("model"+models_names[i]):
-                        shutil.rmtree("model"+models_names[i], ignore_errors=True)
+                #if os.path.exists(model_dir+models_names[i]):
+                        #shutil.rmtree(model_dir+models_names[i], ignore_errors=True)
 
         max_accuracy = max(accuracies)
         model_index = accuracies.index(max_accuracy)
@@ -167,36 +164,36 @@ def train():
         print("=================================\n")
         print("=================================\n")
 
-        filename = 'models/model'+models_names[model_index]
+        filename = model_dir+models_names[model_index]
         if os.path.exists(filename):
                 shutil.rmtree(filename, ignore_errors=True)
         else:
                 print("Can not delete the file as it doesn't exists")
         best_models[model_index].save(filename)
-        if os.path.exists("modelovr"):
-                m = OneVsRestModel.load(filename)
-                rr = m.transform(test)
-                print(rr)
-        elif os.path.exists("modelnb"):
-                m = NaiveBayesModel.load(filename)
-                rr = m.transform(test)
-                print(rr)
-        else:
-                m = RandomForestClassificationModel.load(filename)
-                rr = m.transform(test)
-                print(rr)
-        df_test = pd.DataFrame(np.array([["test"]]),
-                   columns=['sen'])
-        df_test = spark.createDataFrame([
-                (0, "Hi I heard about Spark"),
-        ], ["id", "sen"])
-        df_test.show()
-        test1 = transformer.transform(df_test)
-        print(test1)
-        p1 = m.transform(test1)
-        p1.select("prediction").show()
+#        if os.path.exists(model_dir+"ovr"):
+#                m = OneVsRestModel.load(filename)
+#                rr = m.transform(test)
+#                print(rr)
+#        elif os.path.exists(model_dir+"nb"):
+#                m = NaiveBayesModel.load(filename)
+#                rr = m.transform(test)
+#                print(rr)
+#        else:
+#                m = RandomForestClassificationModel.load(filename)
+#                rr = m.transform(test)
+#                print(rr)
+#        df_test = pd.DataFrame(np.array([["test"]]),
+#                   columns=['sen'])
+#        df_test = spark.createDataFrame([
+#                (0, "Hi I heard about Spark"),
+#        ], ["id", "sen"])
+#        df_test.show()
+        #test1 = transformer.transform(df_test)
+        #print(test1)
+        #p1 = m.transform(test1)
+        #p1.select("prediction").show()
         print("Saved model...")
+        return models_names[model_index], str(accuracies[model_index])
 
-
-train()
+#train()
 

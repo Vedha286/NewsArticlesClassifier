@@ -7,6 +7,16 @@ from pyspark.ml import Pipeline
 from pyspark.ml.feature import Tokenizer
 from pyspark.ml.feature import CountVectorizer
 from pyspark.ml.feature import IDF
+import pandas as pd
+import numpy as np
+from pyspark.ml.classification import NaiveBayesModel, RandomForestClassificationModel, OneVsRestModel
+import os
+import nltk
+nltk.download('stopwords')
+from nltk.corpus import stopwords
+from nltk.stem.porter import PorterStemmer
+import re
+ps = PorterStemmer()
 
 news_topics = {0: "general news", 1: "sport", 2: "tech", 3: "entertainment", 4: "finance", 5: "politics", 6: "business", 7: "economics", 
                8: "world", 9: "beauty", 10: "gaming", 11:"science", 12:"travel", 13:"energy", 14:"music", 15:"food"}
@@ -14,6 +24,7 @@ news_topics = {0: "general news", 1: "sport", 2: "tech", 3: "entertainment", 4: 
 r_news_topics = {y: x for x, y in news_topics.items()}
 news_model_file = "../models/news_nb.pkl"
 model = None
+model_dir = 'models/model'
 
 def load_model():
       global model
@@ -21,20 +32,46 @@ def load_model():
             model = pickle.load(open(news_model_file, "rb"))
       except Exception as e:
             print("Error:", e)
-
+def RemoveNonEnglishWords(text):
+        text = str(text)
+        text = re.sub('[^a-zA-Z]', ' ', text)
+        text = text.lower()
+        text = text.split()
+        text = [ps.stem(word) for word in text if not word in stopwords.words('english')]
+        text = ' '.join(text)
+        return text
 def predict(sentence):
+      sentence = RemoveNonEnglishWords(sentence)
       spark = SparkSession.builder.appName("newsClassifier").getOrCreate()
       spark.sparkContext.setLogLevel('WARN')
 
-      df = spark.createDataFrame(Row(sentence))
+      df_test = pd.DataFrame(np.array([["test"]]), columns=['sen'])
+      df_test = spark.createDataFrame([(0, sentence)], ["id", "sen"])
+      df_test.show()
 	
-      tokenizer = Tokenizer(inputCol="_1", outputCol="words")
+      tokenizer = Tokenizer(inputCol="sen", outputCol="words")
       count = CountVectorizer(inputCol="words", outputCol="rawFeatures")
       idf = IDF(inputCol="rawFeatures", outputCol="features")
-
       pipeline = Pipeline(stages=[tokenizer, count, idf])
 
-      rescaledData = pipeline.fit(df).transform(df).select("features")
+      test1 = pipeline.fit(df_test).transform(df_test).select("features")
+      test1.show()
+      if os.path.exists(model_dir+"ovr"):
+            m = OneVsRestModel.load(model_dir+"ovr")
+            rr = m.transform(test1)
+            print(rr.select("prediction"))
+            print(rr.select())
+            print(m.bestModel)
+#                rr = m.transform(test)
+#                print(rr)
+#        elif os.path.exists(model_dir+"nb"):
+#                m = NaiveBayesModel.load(filename)
+#                rr = m.transform(test)
+#                print(rr)
+#        else:
+#                m = RandomForestClassificationModel.load(filename)
+#                rr = m.transform(test)
+#                print(rr)
       global model
       if(not model):
             load_model()
