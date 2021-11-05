@@ -200,7 +200,7 @@
     <h1>News Classifier</h1>
     <!-- {{message_template | safe}} -->
     <form action="/predict_news_category" method="POST">
-      <textarea rows="4" cols="50" placeholder="Enter the news url" id="newsText" name="newsText"></textarea>
+      <textarea required rows="4" cols="50" placeholder="Enter the news url" id="newsText" name="newsText"></textarea>
       <button type="submit" class="btn btn-primary btn-block btn-large">Predict</button>
     </form>
     <a href="/retrain_news_category" style="margin-top: 16px;" title="Re-Train"

@@ -22,7 +22,7 @@ class NewsClassifierQueryOut(BaseModel):
     Category: str
 
 @app.get("/ping")
-# Healthcheck route to ensure that the API is up and running
+
 def ping():
     return {"ping": "pong"}
 
@@ -33,16 +33,7 @@ def load_Home(request: Request):
 @app.get("/retrain_news_category")
 def retrain_news_category(request: Request):
       classifier, accuracy = train()
-      #output = {"Status": "Success", "Classifier": classifier, "Accuracy": str(accuracy)}
-      #print(output)
-      #return output
       return templates.TemplateResponse("index.html", {"request": request,"classifier": classifier,"accuracy" : accuracy})
-
-# @app.post("/predict", response_model=NewsClassifierQueryOut, status_code= 200)
-# def predict_news_category(query_data: NewsClassifierQueryIn):
-#       print(NewsClassifierQueryIn)
-#       category = predict(query_data.News)
-#       return {"Category":category }
 
 @app.post("/predict_news_category", status_code=200)
 

@@ -47,16 +47,13 @@ accuracies = []
 best_models = []
 
 def load_model():
-      print(os.path.exists(model_dir+"ovr"))
-      print(os.path.exists(model_dir+"rf"))
-      print(os.path.exists(model_dir+"nb"))
       if not os.path.exists(model_dir+"ovr") and not os.path.exists(model_dir+"nb") and not os.path.exists(model_dir+"rf"):
             train()
 def train():
         client = MongoClient(mongodb_connection_string)
         db = client.news
         print('Getting data')
-        newsArticles = db.newsArticles.find({}, {"_id":0, "date":0, "source":0}).limit(10000)
+        newsArticles = db.newsArticles.find({}, {"_id":0, "date":0, "source":0})
         client.close()
         newsArticlesArr = []
         for newsArticle in newsArticles:
