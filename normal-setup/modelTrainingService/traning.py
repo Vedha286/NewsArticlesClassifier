@@ -17,7 +17,7 @@ from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
 import numpy as np
 import pandas as pd
-from pyspark.ml import Pipeline
+from pyspark.ml import Pipeline, PipelineModel
 import os
 import shutil
 import mlflow
@@ -36,7 +36,16 @@ news_topics = {0: "general news", 1: "sport", 2: "tech", 3: "entertainment", 4: 
 r_news_topics = {y: x for x, y in news_topics.items()}
 mongodb_connection_string = "mongodb+srv://IIITH-group10:LeoEXtI5sxntXmpG@cluster0.jejzt.mongodb.net/news?retryWrites=true&w=majority"
 
-model_dir = 'models/model'
+model_dir = 'models/model-test'
+spark = SparkSession.builder.master("local").appName("newsClassifier").getOrCreate()
+spark.conf.set("spark.driver.allowMultipleContexts", "true")
+spark.sparkContext.setLogLevel('WARN')
+tokenizer = Tokenizer(inputCol="sen", outputCol="words")
+count = CountVectorizer(inputCol="words", outputCol="rawFeatures")
+idf = IDF(inputCol="rawFeatures", outputCol="features")
+pipeline = Pipeline(stages=[tokenizer, count, idf])
+accuracies = [] 
+best_models = []
 
 def load_model():
       print(os.path.exists(model_dir+"ovr"))
@@ -57,20 +66,17 @@ def train():
 
         print("=================================")
         print("=================================")
-        spark = SparkSession.builder.master("local").appName("newsClassifier").getOrCreate()
-        spark.conf.set("spark.driver.allowMultipleContexts", "true")
-        spark.sparkContext.setLogLevel('WARN')
+        
         df = spark.createDataFrame(Row(RemoveNonEnglishWords(str(x['title']) + " " + str(x['summary'])), r_news_topics[x["category"]] ) for x in newsArticlesArr)
         df = df.withColumnRenamed("_1", "sen")
         df = df.withColumnRenamed("_2", "label")
         df = df.na.fill("test")
         df.show(5)
         
-        tokenizer = Tokenizer(inputCol="sen", outputCol="words")
-        count = CountVectorizer(inputCol="words", outputCol="rawFeatures")
-        idf = IDF(inputCol="rawFeatures", outputCol="features")
-        pipeline = Pipeline(stages=[tokenizer, count, idf])
+        
         transformer = pipeline.fit(df)
+        transformer.write().overwrite().save(model_dir+"pipeline")
+        print(type(transformer))
         rescaledData =transformer.transform(df).select("features", "label")
         print("rescaledData")
         rescaledData.show(2)
@@ -79,19 +85,6 @@ def train():
         print("train")
         train.show(2)
         print("=================================\n")
-        
-        print("test")
-        test.show(2)
-        print("=================================\n")
-        nb = NaiveBayes()
-        rf = RandomForestClassifier(numTrees=5)
-        lr = LogisticRegression(maxIter = 4)
-        ovr = OneVsRest(classifier=lr)
-        print("=================================\n")
-        print("=================================\n")
-        
-        evaluator = MulticlassClassificationEvaluator(labelCol="label", predictionCol="prediction", metricName="accuracy")
-
         print("=================================\n")
        
         print("test")
@@ -127,8 +120,7 @@ def train():
 #             "rf",
 #             "ovr"
         ]
-        accuracies = [] 
-        best_models = []
+        
         for i in range(0, len(models_names)):
                 crossval_model = CrossValidator(estimator=models[i], estimatorParamMaps=paramGrids[i], evaluator=evaluator, numFolds=numFolds)        
                 print("cv Model built: " + models_names[i])
@@ -140,7 +132,7 @@ def train():
                 best_model = model.bestModel
                 
                 print(best_model.explainParams())
-                best_models.append(model)
+                best_models.append(best_model)
 
                 print("Predicting model: " + models_names[i])
                 preds = model.transform(test)
@@ -170,28 +162,29 @@ def train():
         else:
                 print("Can not delete the file as it doesn't exists")
         best_models[model_index].save(filename)
-#        if os.path.exists(model_dir+"ovr"):
-#                m = OneVsRestModel.load(filename)
-#                rr = m.transform(test)
-#                print(rr)
-#        elif os.path.exists(model_dir+"nb"):
-#                m = NaiveBayesModel.load(filename)
-#                rr = m.transform(test)
-#                print(rr)
-#        else:
-#                m = RandomForestClassificationModel.load(filename)
-#                rr = m.transform(test)
-#                print(rr)
-#        df_test = pd.DataFrame(np.array([["test"]]),
-#                   columns=['sen'])
-#        df_test = spark.createDataFrame([
-#                (0, "Hi I heard about Spark"),
-#        ], ["id", "sen"])
-#        df_test.show()
-        #test1 = transformer.transform(df_test)
-        #print(test1)
-        #p1 = m.transform(test1)
-        #p1.select("prediction").show()
+        
+        df_test = pd.DataFrame(np.array([["test"]]), columns=['sen'])
+        df_test = spark.createDataFrame([(0, "testing data")], ["id", "sen"])
+        df_test.show()
+        test1 = PipelineModel.load(model_dir+"pipeline").transform(df_test).select("features")
+        test1.show()
+        if os.path.exists(model_dir+"ovr"):
+                m = OneVsRestModel.load(model_dir+"ovr")
+                rr = m.transform(test1)
+                print(rr.collect())
+                print(rr)
+        elif os.path.exists(model_dir+"nb"):
+                m = NaiveBayesModel.load(model_dir+"nb")
+                rr = m.transform(test1)
+                print(rr.collect())
+                print(rr)
+        else:
+                m = RandomForestClassificationModel.load(model_dir+"rf")
+                rr = m.transform(test1)
+                print(rr.collect())
+                print(rr)
+        rr.show()
+
         print("Saved model...")
         return models_names[model_index], str(accuracies[model_index])
 

@@ -3,7 +3,7 @@ from pyspark import SparkContext
 from pyspark.sql import SparkSession
 from pyspark.sql import Row
 from pyspark.sql import functions as sf
-from pyspark.ml import Pipeline
+from pyspark.ml import Pipeline, PipelineModel
 from pyspark.ml.feature import Tokenizer
 from pyspark.ml.feature import CountVectorizer
 from pyspark.ml.feature import IDF
@@ -26,6 +26,7 @@ news_model_file = "../models/news_nb.pkl"
 model = None
 model_dir = 'models/model'
 
+
 def load_model():
       global model
       try:
@@ -41,47 +42,43 @@ def RemoveNonEnglishWords(text):
         text = ' '.join(text)
         return text
 def predict(sentence):
-      sentence = RemoveNonEnglishWords(sentence)
-      spark = SparkSession.builder.appName("newsClassifier").getOrCreate()
-      spark.sparkContext.setLogLevel('WARN')
+	sentence = RemoveNonEnglishWords(sentence)
+	spark = SparkSession.builder.appName("newsClassifier").getOrCreate()
+	spark.sparkContext.setLogLevel('WARN')
 
-      df_test = pd.DataFrame(np.array([["test"]]), columns=['sen'])
-      df_test = spark.createDataFrame([(0, sentence)], ["id", "sen"])
-      df_test.show()
-	
-      tokenizer = Tokenizer(inputCol="sen", outputCol="words")
-      count = CountVectorizer(inputCol="words", outputCol="rawFeatures")
-      idf = IDF(inputCol="rawFeatures", outputCol="features")
-      pipeline = Pipeline(stages=[tokenizer, count, idf])
+	print(sentence)
+	df_test = pd.DataFrame(np.array([["test"]]), columns=['sen'])
+	df_test = spark.createDataFrame([(0, "testing data")], ["id", "sen"])
+	df_test.show()
 
-      test1 = pipeline.fit(df_test).transform(df_test).select("features")
-      test1.show()
-      if os.path.exists(model_dir+"ovr"):
-            m = OneVsRestModel.load(model_dir+"ovr")
-            rr = m.transform(test1)
-            print(rr.select("prediction"))
-            print(rr.select())
-            print(m.bestModel)
-#                rr = m.transform(test)
-#                print(rr)
-#        elif os.path.exists(model_dir+"nb"):
-#                m = NaiveBayesModel.load(filename)
-#                rr = m.transform(test)
-#                print(rr)
-#        else:
-#                m = RandomForestClassificationModel.load(filename)
-#                rr = m.transform(test)
-#                print(rr)
-      global model
-      if(not model):
-            load_model()
-            if(not model):
-                  return "Error please train model before predicting"
-            else: 
-                  y = model.predict(sentence)
-                  return y[0]
-      y = model.predict(rescaledData)
-      return y[0]
+	test1 = PipelineModel.load(model_dir+"pipeline").transform(df_test).select("features")
+	test1.show()
+	if os.path.exists(model_dir+"ovr"):
+		m = OneVsRestModel.load(model_dir+"ovr")
+		rr = m.transform(test1)
+		print(rr.collect())
+		print(rr)
+	elif os.path.exists(model_dir+"nb"):
+		m = NaiveBayesModel.load(model_dir+"nb")
+		rr = m.transform(test1)
+		print(rr.collect())
+		print(rr)
+	else:
+		m = RandomForestClassificationModel.load(model_dir+"rf")
+		rr = m.transform(test1)
+		print(rr.collect())
+		print(rr)
+	rr.show()
+      #global model
+      #if(not model):
+            #load_model()
+            #if(not model):
+                  #return "Error please train model before predicting"
+            #else: 
+                  #y = model.predict(sentence)
+                  #return y[0]
+      #y = model.predict(rescaledData)
+	return "test" #y[0]
 
 # y = predict("festivals of India Pictures: festivals of India Photos / Images The country's largest public sector bank, the State Bank of India (SBI) has announced that as part of its festive season scheme, it will be offering credit score linked home loans at 6.7%, irrespective of the loan amount. SBI has also waived processing fees on home loans. Click here to know how to avail SBI home loan.more23 Sep, 2021, 02.10 PM IST21 Sep, 2021, 10.25 AM ISTThe first prototype train of the Kanpur and Agra Metro projects has been inaugurated by Uttar Pradesh Chief Minister Yogi Adi")
 # print(y)
