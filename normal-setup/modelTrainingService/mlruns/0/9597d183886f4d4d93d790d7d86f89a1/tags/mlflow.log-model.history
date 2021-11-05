@@ -1,1 +1,0 @@
-[{"run_id": "9597d183886f4d4d93d790d7d86f89a1", "artifact_path": "best-model", "utc_time_created": "2021-11-05 08:39:22.022943", "flavors": {"spark": {"pyspark_version": "2.4.6", "model_data": "sparkml"}, "python_function": {"loader_module": "mlflow.spark", "python_version": "3.6.9", "data": "sparkml", "env": "conda.yaml"}}}]
