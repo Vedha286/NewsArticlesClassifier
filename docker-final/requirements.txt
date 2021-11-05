@@ -12,3 +12,5 @@ numpy
 fastapi
 uvicorn
 "pymongo[srv]"
+python-multipart
+
