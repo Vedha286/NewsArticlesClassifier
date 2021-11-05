@@ -2,6 +2,7 @@ kafka-python
 pyspark==2.4.6
 findspark
 pymongo
+"pymongo[srv]"
 nltk
 pandas
 sklearn
