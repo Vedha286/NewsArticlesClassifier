@@ -57,7 +57,7 @@ def train():
         client = MongoClient(mongodb_connection_string)
         db = client.news
         print('Getting data')
-        newsArticles = db.newsArticles.find({}, {"_id":0, "date":0, "source":0})
+        newsArticles = db.newsArticles.find({}, {"_id":0, "date":0, "source":0}).limit(10)
         client.close()
         newsArticlesArr = []
         for newsArticle in newsArticles:
@@ -107,18 +107,18 @@ def train():
         print("paramGrid_rf built")
         paramGrids = [
               paramGrid_nb, 
-             paramGrid_rf, 
-             paramGrid_ovr
+#             paramGrid_rf, 
+#             paramGrid_ovr
         ]
         models = [
               nb, 
-             rf, 
-             ovr
+#             rf, 
+#             ovr
         ]
         models_names = [
                             "nb",
-             "rf",
-             "ovr"
+#             "rf",
+#             "ovr"
         ]
         
         for i in range(0, len(models_names)):
@@ -188,5 +188,5 @@ def train():
         print("Saved model...")
         return models_names[model_index], str(accuracies[model_index])
 
-train()
+#train()
 

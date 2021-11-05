@@ -24,7 +24,7 @@ news_topics = {0: "general news", 1: "sport", 2: "tech", 3: "entertainment", 4: 
 r_news_topics = {y: x for x, y in news_topics.items()}
 news_model_file = "../models/news_nb.pkl"
 model = None
-model_dir = 'models/model'
+model_dir = 'models/model-test'
 
 
 def load_model():
@@ -43,42 +43,38 @@ def RemoveNonEnglishWords(text):
         return text
 def predict(sentence):
 	sentence = RemoveNonEnglishWords(sentence)
-	spark = SparkSession.builder.appName("newsClassifier").getOrCreate()
+	spark = SparkSession.builder.master("local[0]").appName("newsClassifierPredictor").getOrCreate()
+
 	spark.sparkContext.setLogLevel('WARN')
 
 	print(sentence)
 	df_test = pd.DataFrame(np.array([["test"]]), columns=['sen'])
-	df_test = spark.createDataFrame([(0, "testing data")], ["id", "sen"])
+	df_test = spark.createDataFrame([(0, sentence)], ["id", "sen"])
 	df_test.show()
 
 	test1 = PipelineModel.load(model_dir+"pipeline").transform(df_test).select("features")
 	test1.show()
 	if os.path.exists(model_dir+"ovr"):
 		m = OneVsRestModel.load(model_dir+"ovr")
+		print("model loaded")
 		rr = m.transform(test1)
-		print(rr.collect())
+		return (news_topics[rr.collect()[0]["prediction"]])
 		print(rr)
 	elif os.path.exists(model_dir+"nb"):
 		m = NaiveBayesModel.load(model_dir+"nb")
+		print("model loaded")
 		rr = m.transform(test1)
-		print(rr.collect())
+		return (news_topics[rr.collect()[0]["prediction"]])
+		print(rr)
+	elif os.path.exists(model_dir+"rf"):
+		m = RandomForestClassificationModel.load(model_dir+"rf")
+		print("model loaded")
+		rr = m.transform(test1)
+		return (news_topics[rr.collect()[0]["prediction"]])
 		print(rr)
 	else:
-		m = RandomForestClassificationModel.load(model_dir+"rf")
-		rr = m.transform(test1)
-		print(rr.collect())
-		print(rr)
-	rr.show()
-      #global model
-      #if(not model):
-            #load_model()
-            #if(not model):
-                  #return "Error please train model before predicting"
-            #else: 
-                  #y = model.predict(sentence)
-                  #return y[0]
-      #y = model.predict(rescaledData)
-	return "test" #y[0]
+		return ("No model")
+	
 
 # y = predict("festivals of India Pictures: festivals of India Photos / Images The country's largest public sector bank, the State Bank of India (SBI) has announced that as part of its festive season scheme, it will be offering credit score linked home loans at 6.7%, irrespective of the loan amount. SBI has also waived processing fees on home loans. Click here to know how to avail SBI home loan.more23 Sep, 2021, 02.10 PM IST21 Sep, 2021, 10.25 AM ISTThe first prototype train of the Kanpur and Agra Metro projects has been inaugurated by Uttar Pradesh Chief Minister Yogi Adi")
 # print(y)
