@@ -20,9 +20,9 @@ r_news_topics = {y: x for x, y in news_topics.items()}
 
 
 def start_tag(bg):
-      	return "<div class='alert alert-" + bg + " alert-dismissible fade show' role='alert><strong>"
+      	return "<div class='alert alert-" + bg + " alert-dismissible fade show' role='alert'><strong>"
 
-end_tag = "</strong> <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div"
+end_tag = "</strong> <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>"
 
 
 model_dir = 'models/model-test'
@@ -45,7 +45,7 @@ def predict(sentence):
 	print("Article: " + sentence)
 	df_test = pd.DataFrame(np.array([["test"]]), columns=['sen'])
 	df_test = spark.createDataFrame([(0, sentence)], ["id", "sen"])
-	df_test.show()
+#	df_test.show()
 
 	test1 = PipelineModel.load(model_dir+"pipeline").transform(df_test).select("features")
 #	test1.show()
@@ -55,26 +55,26 @@ def predict(sentence):
 		rr = m.transform(test1)
 		pred =  (news_topics[rr.collect()[0]["prediction"]])
 
-		return = start_tag("info") + pred + end_tag
+		return start_tag("info") + pred + end_tag
 
 	elif os.path.exists(model_dir+"nb"):
 		m = NaiveBayesModel.load(model_dir+"nb")
 		print("model loaded")
 		rr = m.transform(test1)
-		pred =  (news_topics[rr.collect()[0]["prediction"]])
+		pred = (news_topics[rr.collect()[0]["prediction"]])
 
-		return = start_tag("info") + pred + end_tag
+		return start_tag("info") + pred + end_tag
 	elif os.path.exists(model_dir+"rf"):
 		m = RandomForestClassificationModel.load(model_dir+"rf")
 		print("model loaded")
 		rr = m.transform(test1)
 		pred =  (news_topics[rr.collect()[0]["prediction"]])
 
-		return = start_tag("info") + pred + end_tag
+		return start_tag("info") + pred + end_tag
 	else:
 		pred =  "Error: <span class='font-weight-normal'>There is no model! Please train model again or try again after a while</span>"
-
-		return = start_tag("danger") + pred + end_tag
+		
+		return start_tag("danger") + pred + end_tag
 	
 
 # y = predict("festivals of India Pictures: festivals of India Photos / Images The country's largest public sector bank, the State Bank of India (SBI) has announced that as part of its festive season scheme, it will be offering credit score linked home loans at 6.7%, irrespective of the loan amount. SBI has also waived processing fees on home loans. Click here to know how to avail SBI home loan.more23 Sep, 2021, 02.10 PM IST21 Sep, 2021, 10.25 AM ISTThe first prototype train of the Kanpur and Agra Metro projects has been inaugurated by Uttar Pradesh Chief Minister Yogi Adi")
